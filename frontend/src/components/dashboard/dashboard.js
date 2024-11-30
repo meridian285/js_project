@@ -214,7 +214,7 @@ export class Dashboard {
                 if (event.target.id === 'menu-dropdown-link') {
                     dropdownMenuElement.style.borderColor = '#0D6EFD';
 
-                    if (event.target.classList.contains('collapse')) {
+                    if (event.target.classList.contains('collapsed')) {
                         event.target.style.borderBottomLeftRadius = '5px';
                         event.target.style.borderBottomRightRadius = '5px';
                     } else {

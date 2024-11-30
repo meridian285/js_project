@@ -3,8 +3,6 @@ import {LOGIN, LOGOUT, POST, SIGNUP} from "../../../config/config";
 
 export class AuthService {
 
-    static isTokenRefreshing = true;
-
     static async logIn(data) {
         const result = await HttpUtils.request(LOGIN, POST, false, data);
 
@@ -16,8 +14,6 @@ export class AuthService {
     }
 
     static async signUp(data) {
-        this.isTokenRefreshing = false;
-
         const result = await HttpUtils.request(SIGNUP, POST, false, data);
 
         if (result.error || !result.response || (result.response && (!result.response.user.id ||
@@ -26,7 +22,6 @@ export class AuthService {
             return false;
         }
 
-        this.isTokenRefreshing = true;
         return result.response;
     }
 

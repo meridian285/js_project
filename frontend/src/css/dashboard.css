@@ -56,6 +56,11 @@
     font-weight: 400;
 }
 
+.income {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
 .menu-dropdown-link {
     color: #052C65;
 }
@@ -94,6 +99,7 @@
 .dropdown-li {
     border: 1px solid transparent;
     border-radius: 7px;
+    overflow: hidden;
 }
 
 .content {
