@@ -1,5 +1,6 @@
 import {DateUtils} from "../../utils/date-utils";
 import {OperationsService} from "../service/operations-service";
+import {Layout} from "../layout";
 
 export class Dashboard {
     constructor(openNewRoute) {
@@ -12,9 +13,17 @@ export class Dashboard {
         this.incomeDiagram = document.getElementById('income-diagram');
         this.expensesDiagram = document.getElementById('expenses-diagram');
 
+        Layout.getBalance(this.openNewRoute).then();
+        Layout.getUserName(this.openNewRoute);
+
         this.content();
 
-        let date = null;
+
+        let date = {
+            dateFrom: new Date().toISOString().slice(0, 10),
+            dateTo: new Date().toISOString().slice(0, 10)
+        };
+
         const dateInterval = document.querySelectorAll('.select-interval');
         dateInterval.forEach(item => {
             item.addEventListener('click', () => {
@@ -43,11 +52,6 @@ export class Dashboard {
                 this.getData(date).then();
             })
         })
-
-        this.getData({
-            dateFrom: new Date().toISOString().slice(0, 10),
-            dateTo: new Date().toISOString().slice(0, 10)
-        }).then();
     }
 
     async getData(date) {

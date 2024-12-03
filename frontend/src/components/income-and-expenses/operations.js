@@ -12,6 +12,7 @@ export class Operations {
         this.endDateInput = document.getElementById('endDate');
 
         Layout.getBalance(this.openNewRoute).then();
+        Layout.getUserName(this.openNewRoute);
 
         this.content();
 
