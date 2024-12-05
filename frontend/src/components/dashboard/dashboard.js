@@ -137,7 +137,6 @@ export class Dashboard {
             },
             options: {
                 responsive: true,
-
                 plugins: {
                     title: {
                         display: true,
@@ -149,11 +148,8 @@ export class Dashboard {
                     }
                 },
                 legend: {
-                    display: true,
-                    position: 'top',
-                    labels: {
-                        boxWidth: 80,
-                        fontColor: 'black'
+                    legend: {
+                        align: 'start',
                     }
                 },
             }
