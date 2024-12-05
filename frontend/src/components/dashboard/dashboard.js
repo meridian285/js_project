@@ -1,4 +1,3 @@
-import {DateUtils} from "../../utils/date-utils";
 import {OperationsService} from "../service/operations-service";
 import {Layout} from "../layout";
 
@@ -14,50 +13,44 @@ export class Dashboard {
         this.expensesDiagram = document.getElementById('expenses-diagram');
 
         Layout.getBalance(this.openNewRoute).then();
-        Layout.getUserName(this.openNewRoute);
+        Layout.showUserName();
 
         this.content();
 
 
-        let date = {
-            dateFrom: new Date().toISOString().slice(0, 10),
-            dateTo: new Date().toISOString().slice(0, 10)
-        };
-
+        let url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
         const dateInterval = document.querySelectorAll('.select-interval');
         dateInterval.forEach(item => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('active')) {
                     switch (item.id) {
-                        case 'today':
-                            date = DateUtils.today();
-                            break;
                         case  'week':
-                            date = DateUtils.lastWeekInterval();
+                            url = '?period=week';
                             break;
                         case 'month':
-                            date = DateUtils.lastMothInterval();
+                            url = '?period=month';
                             break;
                         case 'year':
-                            date = DateUtils.lastYearInterval();
+                            url = '?period=year';
                             break;
                         case 'all-time':
-                            date = DateUtils.allTimeInterval();
+                            url = '?period=all';
                             break;
                         case 'interval':
-                            date = DateUtils.selectInterval(this.startDateInput.value, this.endDateInput.value);
+                            url = `?period=interval&dateFrom=${this.startDateInput.value}&dateTo=${this.endDateInput.value}`;
                             break;
+                        default:
+                            url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
                     }
+                    this.getData(url).then();
                 }
-                this.getData(date).then();
             })
         })
+        this.getData(url).then();
     }
 
-    async getData(date) {
-        const interval = `?period=interval&dateFrom=${date.dateFrom}&dateTo=${date.dateTo}`;
-
-        const response = await OperationsService.getOperationWithFilter(interval);
+    async getData(url) {
+        const response = await OperationsService.getOperationWithFilter(url);
 
         if (response.error) {
             return response.redirect ? this.openNewRoute(response.redirect) : null;
@@ -111,13 +104,11 @@ export class Dashboard {
             data: {
                 labels: incomeDataName,
                 datasets: [{
-                    // label: 'Временные данные',
                     data: incomeData,
                     borderWidth: 1
                 }]
             },
             options: {
-
                 plugins: {
                     title: {
                         display: true,
@@ -126,6 +117,9 @@ export class Dashboard {
                         font: {
                             size: 28
                         }
+                    },
+                    legend: {
+                        align: 'start',
                     }
                 }
             }
@@ -137,7 +131,6 @@ export class Dashboard {
             data: {
                 labels: expensesDataName,
                 datasets: [{
-                    // label: 'Временные данные',
                     data: expensesData,
                     borderWidth: 1
                 }]

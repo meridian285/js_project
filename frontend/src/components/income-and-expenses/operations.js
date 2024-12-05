@@ -1,7 +1,6 @@
 import {Layout} from "../layout";
 import {OperationsService} from "../service/operations-service";
 import {EDIT_OPERATION} from "../../../config/config";
-import {DateUtils} from "../../utils/date-utils";
 
 export class Operations {
     constructor(openNewRoute) {
@@ -12,48 +11,44 @@ export class Operations {
         this.endDateInput = document.getElementById('endDate');
 
         Layout.getBalance(this.openNewRoute).then();
-        Layout.getUserName(this.openNewRoute);
+        Layout.showUserName();
 
         this.content();
 
-        let date = null;
+        let url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
         const dateInterval = document.querySelectorAll('.select-interval');
         dateInterval.forEach(item => {
             item.addEventListener('click', () => {
                 if (item.classList.contains('active')) {
                     switch (item.id) {
-                        case 'today':
-                            date = DateUtils.today();
-                            break;
                         case  'week':
-                            date = DateUtils.lastWeekInterval();
+                            url = '?period=week';
                             break;
                         case 'month':
-                            date = DateUtils.lastMothInterval();
+                            url = '?period=month';
                             break;
                         case 'year':
-                            date = DateUtils.lastYearInterval();
+                            url = '?period=year';
                             break;
                         case 'all-time':
-                            date = DateUtils.allTimeInterval();
+                            url = '?period=all';
                             break;
                         case 'interval':
-                            date = DateUtils.selectInterval(this.startDateInput.value, this.endDateInput.value);
+                            url = `?period=interval&dateFrom=${this.startDateInput.value}&dateTo=${this.endDateInput.value}`;
                             break;
+                        default:
+                            url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
                     }
+                    this.getData(url).then();
                 }
-                this.getData(date).then();
             })
         })
-
-        this.getData({dateFrom: new Date().toISOString().slice(0, 10), dateTo: new Date().toISOString().slice(0, 10)}).then();
+        this.getData(url).then();
     }
 
-    async getData(date) {
+    async getData(url) {
 
-        const interval = `?period=interval&dateFrom=${date.dateFrom}&dateTo=${date.dateTo}`;
-
-        const response = await OperationsService.getOperationWithFilter(interval);
+        const response = await OperationsService.getOperationWithFilter(url);
 
         if (response.error) {
             return response.redirect ? this.openNewRoute(response.redirect) : null;

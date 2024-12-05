@@ -2,10 +2,13 @@ import {IncomeService} from "../service/income-service";
 import {ExpensesService} from "../service/expenses-service";
 import {OperationsService} from "../service/operations-service";
 import {OPERATIONS} from "../../../config/config";
+import {UrlUtils} from "../service/url-utils";
 
 export class CreateOperation {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute;
+
+        const type = UrlUtils.getUrlParam('type');
 
         this.typeSelectElement = document.getElementById('type');
         this.categorySelectElement = document.getElementById('category');
@@ -13,6 +16,8 @@ export class CreateOperation {
         this.amountInputElement = document.getElementById('amount');
         this.dateInputElement = document.getElementById('start-date');
         this.commentInputElement = document.getElementById('comment');
+
+        this.typeSelectElement.value = type;
 
         if (this.typeSelectElement.value === 'expense') {
             this.getExpenses().then();
