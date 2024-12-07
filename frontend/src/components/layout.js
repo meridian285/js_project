@@ -5,17 +5,13 @@ import {AuthUtils} from "../utils/auth-utils";
 export class Layout {
 
     static async getBalance(openNewRoute) {
+        const balanceElement = document.getElementById('balance');
+
         const response = await HttpUtils.request(BALANCE)
 
         if (response.error) {
             return response.redirect ? openNewRoute(response.redirect) : null;
         }
-
-        this.showBalance(response)
-    }
-
-    static showBalance(response) {
-        const balanceElement = document.getElementById('balance');
 
         if (balanceElement) {
             balanceElement.innerText = response.response.balance + '$';

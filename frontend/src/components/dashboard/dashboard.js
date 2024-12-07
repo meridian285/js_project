@@ -120,6 +120,15 @@ export class Dashboard {
                     },
                     legend: {
                         align: 'start',
+                        labels: {
+                            generateLabels: chart => chart.data.labels.map((l, i) => ({
+                                datasetIndex: 0,
+                                index: i,
+                                text: l.slice(0, 15),
+                                fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                strokeStyle: chart.data.datasets[0].backgroundColor[i],
+                            }))
+                        }
                     }
                 }
             }
@@ -128,6 +137,7 @@ export class Dashboard {
         new Chart(this.expensesDiagram, {
             type: 'pie',
             responsive: true,
+            maintainAspectRatio: false,
             data: {
                 labels: expensesDataName,
                 datasets: [{
@@ -136,7 +146,6 @@ export class Dashboard {
                 }]
             },
             options: {
-                responsive: true,
                 plugins: {
                     title: {
                         display: true,
@@ -145,16 +154,22 @@ export class Dashboard {
                         font: {
                             size: 28
                         }
-                    }
-                },
-                legend: {
+                    },
                     legend: {
                         align: 'start',
+                        labels: {
+                            generateLabels: chart => chart.data.labels.map((l, i) => ({
+                                datasetIndex: 0,
+                                index: i,
+                                text: l.slice(0, 15),
+                                fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                strokeStyle: chart.data.datasets[0].backgroundColor[i],
+                            }))
+                        }
                     }
-                },
+                }
             }
         });
-
     }
 
     content() {
