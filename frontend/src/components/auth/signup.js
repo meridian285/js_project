@@ -1,6 +1,7 @@
 import {LOGIN, POST, SIGNUP} from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
 import {HttpUtils} from "../../utils/http-utils";
+import {AuthService} from "../service/auth-service";
 
 export class SignUp {
     constructor(openNewRoute) {
@@ -63,7 +64,9 @@ export class SignUp {
     validateField(field, element) {
         if (field.id === 'fullNameInput') {
             element.addEventListener('input', function () {
-                this.value = this.value.replace(/([A-Z][a-z])/g, '');
+                element.value = element.value.replace(/([0-9])/g, '');
+                element.value = element.value.replace(/([a-z])/g, '');
+                element.value = element.value.replace(/([A-Z])/g, '');
                 element.value = element.value.replace(/( |^)[а-яё]/g, (item) => {
                     return item.toUpperCase();
                 })
@@ -109,7 +112,8 @@ export class SignUp {
         this.commonErrorElement.style.display = 'none';
         const arrayName = this.fullNameElement.value.split(' ');
         if (this.validateField) {
-            const result = await HttpUtils.request(SIGNUP, POST, false, {
+
+            const signUpResult = await AuthService.signUp({
                 name: arrayName[0],
                 lastName: arrayName[1],
                 email: this.emailElement.value,
@@ -117,32 +121,11 @@ export class SignUp {
                 passwordRepeat: this.repeatPasswordElement.value,
             });
 
-            console.log(result.response)
-
-            if (result.error || !result.response || (result.response && (!result.response.user.id ||
-                !result.response.user.email || !result.response.user.name || !result.response.user.lastName))) {
-
-                this.commonErrorElement.style.display = 'block';
-                return;
+            if (signUpResult) {
+                return this.openNewRoute(LOGIN);
             }
 
-            this.openNewRoute(LOGIN);
+            this.commonErrorElement.style.display = 'block';
         }
     }
-
-
 }
-
-
-// if (this.emailElement.value && this.emailElement.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-//     if (this.emailElement.classList.contains('is-invalid')) {
-//         this.emailElement.classList.remove('is-invalid');
-//     }
-//     this.emailElement.classList.add('is-valid');
-// } else {
-//     if (this.emailElement.classList.contains('is-valid')) {
-//         this.emailElement.classList.remove('is-valid');
-//     }
-//     this.emailElement.classList.add('is-invalid');
-//     isValid = false;
-// }

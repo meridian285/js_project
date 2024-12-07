@@ -1,7 +1,3 @@
-.balance-text {
-    font-weight: bold;
-}
-
 .logo {
     width: 98px;
     height: 40px;
@@ -9,4 +5,12 @@
 
 .dashboard {
     width: 219px;
+}
+
+.balance-text {
+    font-weight: bold;
+}
+
+.form {
+    width: 421px;
 }

@@ -1,6 +1,11 @@
 <h1 class="header text-primary-emphasis">
-    Главная
+    Доходы и расходы
 </h1>
+
+<form class="form mt-5 ms-5 d-flex gap-2 flex-wrap">
+    <a href="/create-operation?type=income" class="btn btn-success">Создать доход</a>
+    <a href="/create-operation?type=expense" class="btn btn-danger">Создать расход</a>
+</form>
 
 <div class="days">
     <ul class="list-days d-flex flex-wrap p-0 ms-4 mt-4">
@@ -34,22 +39,30 @@
                 Интервал
             </a>
         </li>
-        <li class="ms-4 mt-2 d-flex align-items-center justify-content-around date-input">
-            <span class="pretext-date" >c</span>
+        <li class="ms-4 mt-2 d-flex align-items-center justify-content-around">
+            <span class="pretext-date">c</span>
             <input type="date" class="input-date" placeholder="Дата" id="startDate" value="2024-11-19" min="2010-01-01" max="2030-12-31">
         </li>
-        <li class="ms-4 mt-2 d-flex align-items-center justify-content-around date-input">
+        <li class="ms-4 mt-2 d-flex align-items-center justify-content-around">
             <span class="pretext-date">по</span>
             <input type="date" class="input-date" placeholder="Дата" id="endDate" value="2024-11-19" min="2010-01-01" max="2030-12-31">
         </li>
     </ul>
 </div>
 
-<div class="row justify-content-center">
-    <div class="col-md-5">
-        <canvas id="income-diagram"></canvas>
-    </div>
-    <div class="col-md-5">
-        <canvas id="expenses-diagram"></canvas>
-    </div>
-</div>
+<table class="table ms-5 text-center">
+    <thead>
+    <tr>
+        <th scope="col">№ операции</th>
+        <th scope="col">Тип</th>
+        <th scope="col">Категория</th>
+        <th scope="col">Сумма</th>
+        <th scope="col">Дата</th>
+        <th scope="col">Комментарий</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody id="dataTable">
+
+    </tbody>
+</table>

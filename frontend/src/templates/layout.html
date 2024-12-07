@@ -17,7 +17,7 @@
                     Главная</a>
             </li>
             <li>
-                <a href="/income-and-expenses" class="main-menu-item nav-link  fs-6 p-2">
+                <a href="/operations" class="main-menu-item nav-link  fs-6 p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="icon bi bi-cash-coin" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -40,7 +40,7 @@
                               d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708"/>
                     </svg>
                 </a>
-                <ul class="menu-dropdown border border-primary p-0 rounded-3 w-220px border-0 collapse" id="categories"
+                <ul class="menu-dropdown border-0 border border-primary p-0 w-220px collapse" id="categories"
                     data-bs-theme="light">
                     <li>
                         <a class="menu-dropdown-item nav-link p-2 rounded-0 active" href="/income">Доходы</a>
@@ -53,8 +53,7 @@
         </ul>
 
         <div class="mb-3">
-            <span class="balance-text px-3 text-primary-emphasis">Баланс:</span><span class="text-primary"
-                                                                                      id="balance">500<span>$</span></span>
+            <span class="balance-text px-3 text-primary-emphasis">Баланс:</span><span class="text-primary" id="balance"></span>
         </div>
 
         <div class="dropdown user d-flex align-items-center border-top border-2 p-3">
@@ -64,7 +63,8 @@
                     <img src="../images/person.svg" alt="avatar">
                 </div>
                 <div class="user-name mx-3">
-                    Roman Chernov
+                    <span id="userName"></span>
+                    <span id="userLastName"></span>
                 </div>
             </a>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">

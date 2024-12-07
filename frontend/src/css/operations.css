@@ -1,0 +1,25 @@
+.logo {
+    width: 98px;
+    height: 40px;
+}
+
+.dashboard {
+    width: 219px;
+}
+
+.balance-text {
+    font-weight: bold;
+}
+
+.form {
+    width: 421px;
+}
+
+.input-date {
+    border: none;
+    outline: none;
+}
+
+.input-date:focus, textarea:focus, select:focus {
+    outline: none;
+}

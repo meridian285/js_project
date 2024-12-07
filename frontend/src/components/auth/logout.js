@@ -1,6 +1,6 @@
-import config, {LOGIN, LOGOUT, POST} from "../../../config/config";
+import {LOGIN} from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
-import {HttpUtils} from "../../utils/http-utils";
+import {AuthService} from "../service/auth-service";
 
 export class Logout {
     constructor(openNewRoute) {
@@ -14,9 +14,9 @@ export class Logout {
     }
 
     async logout() {
-        await HttpUtils.request(LOGOUT, POST, false, {
+        await AuthService.logOut({
             refreshToken: AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey)
-        });
+        })
 
         //Удаляются из localStorage токены и инфо
         AuthUtils.removeAuthInfo();

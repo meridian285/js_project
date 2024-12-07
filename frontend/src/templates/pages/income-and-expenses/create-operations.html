@@ -1,0 +1,21 @@
+<h1 class="header text-primary-emphasis">
+    Создание дохода/расхода
+</h1>
+
+<form class="form mt-5 ms-5 d-flex gap-2 flex-wrap" style="width: 421px;">
+
+    <select type="text" id="type" class="form-control">
+        <option value="income">Доход</option>
+        <option value="expense">Расход</option>
+    </select>
+
+    <select type="text" id="category" class="form-control">
+
+    </select>
+
+    <input type="number" class="form-control" id="amount" placeholder="Сумма в $...">
+    <input type="date" class="form-control" id="start-date" name="trip-start" value="2024-11-16" min="2010-01-01" max="2030-12-31" />
+    <input type="text" class="form-control" id="comment" placeholder="Комментарий...">
+    <button type="button" id="save-button" class="btn btn-success mt-3">Создать</button>
+    <a href="/operations" class="btn btn-danger mt-3">Отмена</a>
+</form>

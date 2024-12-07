@@ -15,3 +15,8 @@
     width: 352px;
     height: 121px;
 }
+
+.new-card {
+    width: 352px;
+    min-block-size: 121px;
+}

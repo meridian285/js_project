@@ -16,6 +16,7 @@
 .avatar {
     width: 36px;
     height: 36px;
+    aspect-ratio: 16 / 9;
     border-radius: 50%;
     background-color: #D9D9D9;
 }
@@ -53,6 +54,11 @@
     display: flex;
     align-items: center;
     font-weight: 400;
+}
+
+.income {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
 }
 
 .menu-dropdown-link {
@@ -93,8 +99,30 @@
 .dropdown-li {
     border: 1px solid transparent;
     border-radius: 7px;
+    overflow: hidden;
 }
 
 .content {
     margin-left: 219px;
 }
+
+.user-name {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.input-date {
+    margin-right: 10px;
+    border: none;
+    outline: none;
+}
+
+.input-date:focus, textarea:focus, select:focus {
+    outline: none;
+}
+
+.pretext-date {
+    padding-left: 10px;
+    padding-right: 5px;
+}
+
