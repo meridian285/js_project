@@ -2,29 +2,34 @@ import {IncomeService} from "../service/income-service";
 import {UrlUtils} from "../service/url-utils";
 import {INCOME} from "../../../config/config";
 import {OperationsService} from "../service/operations-service";
+import {ApiEnum} from "../../types/api.enum";
+import {AllOperationsType} from "../../types/allOperations.type";
 
 export class DeleteIncome {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    readonly idCategory: string | null;
+
+    constructor(openNewRoute: any) {
 
         this.openNewRoute = openNewRoute;
 
         this.idCategory = UrlUtils.getUrlParam('id');
         if (!this.idCategory) {
-            return this.openNewRoute('/');
+            return this.openNewRoute(ApiEnum.DASHBOARD);
         }
 
         this.init().then();
     }
 
-    async init() {
-        const allOperations = await this.getOperations();
+    private async init(): Promise<void> {
+        const allOperations: AllOperationsType[] = await this.getOperations();
 
         const titleDeletedCategory = await this.getCategory();
 
-        const idOperations = [];
+        const idOperations: number[] = [];
 
-        allOperations.forEach(item => {
-            if (String(item.category) === String(titleDeletedCategory)) {
+        allOperations.forEach((item: AllOperationsType) => {
+            if (String(item.category === String(titleDeletedCategory)) {
                 idOperations.push(item.id);
             }
         });
@@ -34,7 +39,7 @@ export class DeleteIncome {
         this.deleteIncome().then();
     }
 
-    async deleteIncome() {
+    private async deleteIncome(): Promise<void> {
         const response = await IncomeService.deleteIncome(this.idCategory);
 
         if (response.error) {
@@ -44,13 +49,13 @@ export class DeleteIncome {
         return this.openNewRoute(INCOME);
     }
 
-    async getCategory() {
+    private async getCategory(): Promise<string> {
         const result = await IncomeService.getIncome(this.idCategory)
 
         return result.income.title;
     }
 
-    async getOperations() {
+    private async getOperations() {
         const response = await OperationsService.getOperationWithFilter('?period=all');
 
         const result = response.operations
@@ -59,8 +64,8 @@ export class DeleteIncome {
     }
 
 
-    async deleteOperation(id) {
-        id.forEach(item => {
+    async deleteOperation(id: number[]) {
+        id.forEach((item: number) => {
             const response = OperationsService.deleteOperation(item);
 
             if (response.error) {

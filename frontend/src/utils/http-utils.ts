@@ -1,15 +1,19 @@
-import config, {GET, LOGIN} from "../../config/config";
+import config from "../../config/config";
 import {AuthUtils} from "./auth-utils";
+import {MethodEnum} from "../types/method-enum";
+import {ApiEnum} from "../types/api.enum";
+import {ParamForResponseType} from "../types/param-for-response.type";
+import {ResultHttpUtilsType} from "../types/result-httpUtils.type";
 
 export class HttpUtils {
-    static async request(url, method = GET, useAuth = true, body = null) {
+    public static async request(url: string, method:MethodEnum = MethodEnum.GET, useAuth: boolean = true, body: any | null = null): Promise<ResultHttpUtilsType> {
 
-        const result = {
+        const result: ResultHttpUtilsType = {
             error: false,
             response: null,
         };
 
-        const params = {
+        const params: ParamForResponseType = {
             method: method,
             headers: {
                 'Content-type': 'application/json',
@@ -42,13 +46,13 @@ export class HttpUtils {
             result.error = true;
             if (useAuth && response.status === 401) {
                 if (!token) {
-                    result.redirect = LOGIN;
+                    result.redirect = ApiEnum.LOGIN;
                 } else {
-                    const updateTokenResult = await AuthUtils.updateRefreshToken();
+                    const updateTokenResult: boolean = await AuthUtils.updateRefreshToken();
                     if (updateTokenResult) {
                         return this.request(url, method, useAuth, body);
                     } else {
-                        result.redirect = LOGIN;
+                        result.redirect = ApiEnum.LOGIN;
                     }
                 }
             }

@@ -2,7 +2,16 @@ import {OperationsService} from "../service/operations-service";
 import {Layout} from "../layout";
 
 export class Dashboard {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    private table: HTMLElement | null;
+    readonly startDateInput: HTMLInputElement;
+    readonly endDateInput: HTMLElement | null;
+    readonly incomeDiagram: HTMLElement | null;
+    readonly expensesDiagram: HTMLElement | null;
+
+    // хотелось бы вот так записать, но такого класса нет, а файл Chart библиотечный как тут быть?
+    // private chart = new Chart;
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         this.table = document.getElementById('dataTable');
@@ -37,7 +46,7 @@ export class Dashboard {
                             url = '?period=all';
                             break;
                         case 'interval':
-                            url = `?period=interval&dateFrom=${this.startDateInput.value}&dateTo=${this.endDateInput.value}`;
+                            url = `?period=interval&dateFrom=${this.startDateInput ? ((this.startDateInput as HTMLInputElement).value) : null}&dateTo=${this.endDateInput ? this.endDateInput.value : null}`;
                             break;
                         default:
                             url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
@@ -49,7 +58,7 @@ export class Dashboard {
         this.getData(url).then();
     }
 
-    async getData(url) {
+    private async getData(url: string): Promise<any> {
         const response = await OperationsService.getOperationWithFilter(url);
 
         if (response.error) {
@@ -59,14 +68,14 @@ export class Dashboard {
         this.showDiagram(response.operations);
     }
 
-    clearCanvas(element) {
+    private clearCanvas(element: HTMLElement): void {
         if (Chart.getChart(element)) {
             Chart.getChart(element).destroy();
         }
     }
 
 
-    showDiagram(data) {
+    private showDiagram(data): void {
 
         this.clearCanvas(this.incomeDiagram);
         this.clearCanvas(this.expensesDiagram);
@@ -172,8 +181,8 @@ export class Dashboard {
         });
     }
 
-    content() {
-        const selectInterval = document.querySelectorAll('.select-interval');
+    private content(): void {
+        const selectInterval: NodeListOf<Element> = document.querySelectorAll('.select-interval');
         // Выбор временного интервала
         if (selectInterval) {
             selectInterval.forEach(item =>
@@ -186,21 +195,28 @@ export class Dashboard {
             )
         }
 
-        const menuDropdownLinkElement = document.getElementById('menu-dropdown-link');
-        const arrowElement = document.getElementById('arrow');
-        const menuDropdown = document.querySelectorAll('.menu-dropdown-item');
-        const listMainMenu = document.querySelectorAll('.main-menu-item');
-        const categories = document.getElementById('categories');
-        const dropdownMenuElement = document.getElementById('dropdown-li');
+        const menuDropdownLinkElement: HTMLElement | null = document.getElementById('menu-dropdown-link');
+        const arrowElement: HTMLElement | null = document.getElementById('arrow');
+        const menuDropdown: NodeListOf<Element> = document.querySelectorAll('.menu-dropdown-item');
+        const listMainMenu: NodeListOf<Element> = document.querySelectorAll('.main-menu-item');
+        const categories: HTMLElement | null = document.getElementById('categories');
+        const dropdownMenuElement: HTMLElement | null = document.getElementById('dropdown-li');
 
         // Поворот стрелки при выборе меню аккордеона
-        menuDropdownLinkElement.onclick = () => {
-            if (!menuDropdownLinkElement.classList.contains('collapsed')) {
-                arrowElement.style.transform = 'rotate(90deg)';
-            } else {
-                arrowElement.style.transform = 'rotate(0deg)';
-            }
-        };
+        if (menuDropdownLinkElement) {
+            menuDropdownLinkElement.onclick = () => {
+                if (!menuDropdownLinkElement.classList.contains('collapsed')) {
+                    if (arrowElement) {
+                        arrowElement.style.transform = 'rotate(90deg)';
+                    }
+                } else {
+                    if (arrowElement) {
+                        arrowElement.style.transform = 'rotate(0deg)';
+                    }
+                }
+            };
+        }
+
 
         //Выбор пункта меню
         menuDropdown.forEach(item => {
@@ -219,8 +235,10 @@ export class Dashboard {
                 listMainMenu.forEach(items => items.classList.remove('active'));
                 item.classList.add('active');
 
-                if (event.target.id === 'menu-dropdown-link') {
-                    dropdownMenuElement.style.borderColor = '#0D6EFD';
+                if ((event.target.id as string) === 'menu-dropdown-link') {
+                    if (dropdownMenuElement) {
+                        dropdownMenuElement.style.borderColor = '#0D6EFD';
+                    }
 
                     if (event.target.classList.contains('collapsed')) {
                         event.target.style.borderBottomLeftRadius = '5px';
@@ -231,14 +249,22 @@ export class Dashboard {
                     }
 
                 } else {
-                    dropdownMenuElement.style.borderColor = 'transparent';
-
-                    if (menuDropdownLinkElement.classList.contains('collapsed') && categories.classList.contains('show')) {
-                        arrowElement.style.transform = 'rotate(90deg)';
-                    } else {
-                        arrowElement.style.transform = 'rotate(0deg)';
+                    if (dropdownMenuElement) {
+                        dropdownMenuElement.style.borderColor = 'transparent';
                     }
-                    categories.classList.remove('show');
+
+                    if (menuDropdownLinkElement && categories) {
+                        if (menuDropdownLinkElement.classList.contains('collapsed') && categories.classList.contains('show')) {
+                            if (arrowElement) {
+                                arrowElement.style.transform = 'rotate(90deg)';
+                            }
+                        } else {
+                            if (arrowElement) {
+                                arrowElement.style.transform = 'rotate(0deg)';
+                            }
+                        }
+                        categories.classList.remove('show');
+                    }
                 }
             });
         });

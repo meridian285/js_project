@@ -1,23 +1,38 @@
 import {LOGIN, POST, SIGNUP} from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
-import {HttpUtils} from "../../utils/http-utils";
 import {AuthService} from "../service/auth-service";
+import {ApiEnum} from "../../types/api.enum";
+import {FieldsInputType} from "../../types/fields-input.type";
 
 export class SignUp {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    readonly form: any | null = null;
+    readonly fullNameElement: HTMLElement | null = null;
+    private emailElement: HTMLElement | null = null;
+    private passwordElement: HTMLElement | null = null;
+    private repeatPasswordElement: HTMLElement | null = null;
+    readonly commonErrorElement: HTMLElement | null = null;
+    readonly fields: FieldsInputType[] | undefined;
+    readonly processButton: HTMLElement | null = null;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return this.openNewRoute('/');
+            return this.openNewRoute(ApiEnum.DASHBOARD);
         }
 
-        document.getElementById('form').reset();
+        this.form = document.getElementById('form');
+        if (this.form) {
+            this.form.reset();
+        }
 
         this.fullNameElement = document.getElementById('fullNameInput');
         this.emailElement = document.getElementById('emailInput');
         this.passwordElement = document.getElementById('passwordInput');
         this.repeatPasswordElement = document.getElementById('repeatPasswordInput');
         this.commonErrorElement = document.getElementById('common-error');
+        this.processButton = document.getElementById('process-button')
 
         this.fields = [
             {
@@ -49,19 +64,21 @@ export class SignUp {
             }
         ];
 
-        const that = this;
-        this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
-            item.element.addEventListener('input', (event) => {
-                that.validateField.call(that, item, event.target);
+        const that: SignUp = this;
+        this.fields.forEach((item: FieldsInputType) => {
+            (item.element as HTMLInputElement) = <HTMLInputElement>document.getElementById(item.id);
+            (item.element as HTMLInputElement).addEventListener('input', (event) => {
+                that.validateField.call(that, item, (event.target as HTMLInputElement));
             });
         });
 
-        document.getElementById('process-button').addEventListener('click', this.signUp.bind(this));
+        if (this.processButton) {
+            this.processButton.addEventListener('click', this.signUp.bind(this));
+        }
 
     }
 
-    validateField(field, element) {
+    private validateField(field: FieldsInputType, element: HTMLInputElement): boolean {
         if (field.id === 'fullNameInput') {
             element.addEventListener('input', function () {
                 element.value = element.value.replace(/([0-9])/g, '');
@@ -73,7 +90,7 @@ export class SignUp {
             })
         }
 
-        if (!element.value || !element.value.match(field.regex)) {
+        if (!element.value || !element.value.match((field.regex as RegExp))) {
             element.classList.remove('is-valid');
             element.classList.add('is-invalid');
             field.valid = false;
@@ -91,9 +108,11 @@ export class SignUp {
             }
 
             if (field.id === 'repeatPasswordInput') {
-                const repeatPasswordInput = this.fields.find(item => item.id === 'repeatPasswordInput');
-                const passwordInput = this.fields.find(item => item.id === 'passwordInput');
-                if (repeatPasswordInput.element.value !== '' && repeatPasswordInput.element.value === passwordInput.element.value) {
+                const repeatPasswordInput: FieldsInputType | undefined = (this.fields as FieldsInputType[]).find(item => item.id === 'repeatPasswordInput');
+                // const repeatPasswordInput: FieldsInputType = this.fields.find(item => item.id === 'repeatPasswordInput');
+                const passwordInput: FieldsInputType | undefined = (this.fields as FieldsInputType[]).find(item => item.id === 'passwordInput');
+                if (((repeatPasswordInput as FieldsInputType).element as HTMLInputElement).value !== ''
+                    && ((repeatPasswordInput as FieldsInputType).element as HTMLInputElement).value === ((passwordInput as FieldsInputType).element as HTMLInputElement).value) {
                     element.classList.remove('is-invalid');
                     element.classList.add('is-valid');
                     field.valid = true;
@@ -108,24 +127,32 @@ export class SignUp {
         return field.valid;
     }
 
-    async signUp() {
-        this.commonErrorElement.style.display = 'none';
-        const arrayName = this.fullNameElement.value.split(' ');
-        if (this.validateField) {
+    private async signUp(): Promise<void> {
+        if (this.commonErrorElement) {
+            this.commonErrorElement.style.display = 'none';
+        }
+
+        let arrayName = null;
+        if (this.fullNameElement) {
+            arrayName = (this.fullNameElement as HTMLInputElement).value.split(' ');
+        }
+        if ((this.validateField)) {
 
             const signUpResult = await AuthService.signUp({
-                name: arrayName[0],
-                lastName: arrayName[1],
-                email: this.emailElement.value,
-                password: this.passwordElement.value,
-                passwordRepeat: this.repeatPasswordElement.value,
+                name: (arrayName as Array<string>)[0],
+                lastName: (arrayName as Array<string>)[1],
+                email: (this.emailElement as HTMLInputElement).value,
+                password: (this.passwordElement as HTMLInputElement).value,
+                passwordRepeat: (this.repeatPasswordElement as HTMLInputElement).value,
             });
 
             if (signUpResult) {
                 return this.openNewRoute(LOGIN);
             }
 
-            this.commonErrorElement.style.display = 'block';
+            if (this.commonErrorElement) {
+                this.commonErrorElement.style.display = 'block';
+            }
         }
     }
 }

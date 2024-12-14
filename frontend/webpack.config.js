@@ -3,10 +3,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
-    entry: './src/app.js',
+    entry: './src/app.ts',
     mode: 'development',
     output: {
-        filename: 'app.js',
+        filename: 'app.ts',
         path: path.resolve(__dirname, 'dist'),
         publicPath: '/'
     },
@@ -26,10 +26,10 @@ module.exports = {
             patterns: [
                 {from: "./src/templates", to: "templates"},
                 {from: "./src/static/images", to: "images"},
-                {from: "./src/components/dashboard/dashboard.js", to: "js"},
+                {from: "./src/components/dashboard/dashboard.ts", to: "js"},
                 {from: "./src/components/dashboard/menu.js", to: "js"},
                 {from: "./src/components/dashboard/diagrams.js", to: "js"},
-                {from: "./src/utils/delete_action.js", to: "js"},
+                {from: "./src/utils/delete_action.ts", to: "js"},
                 {from: "./src/components/dashboard/chart.js", to: "js"},
                 {from: "./src/components/bootstrap.bundle.min.js", to: "js"},
                 {from: "./src/css", to: "css"},

@@ -1,10 +1,15 @@
 import {AuthUtils} from "../../utils/auth-utils";
-import {LOGIN, POST} from "../../../config/config";
-import {HttpUtils} from "../../utils/http-utils";
 import {AuthService} from "../service/auth-service";
+import {FieldsInputType} from "../../types/fields-input.type";
 
 export class Login {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    private rememberMeElement: HTMLElement | null = null;
+    readonly commonErrorElement: HTMLElement | null = null;
+    private fields: FieldsInputType[] | undefined;
+    readonly processButton: HTMLElement | null = null;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
@@ -13,6 +18,7 @@ export class Login {
 
         this.rememberMeElement = document.getElementById('rememberMeChecked');
         this.commonErrorElement = document.getElementById('common-error');
+        this.processButton = document.getElementById('process-button')
 
         this.fields = [
             {
@@ -30,20 +36,22 @@ export class Login {
             }
         ];
         const that = this;
-        this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
+        this.fields.forEach((item: FieldsInputType) => {
+            (item.element as HTMLElement | null) = document.getElementById(item.id);
             if (item.element) {
                 item.element.addEventListener('change', (event) => {
-                    that.validateField.call(that, item, event.target);
+                    that.validateField.call(that, item, (event.target as HTMLInputElement));
                 });
             }
         })
 
-        document.getElementById('process-button').addEventListener('click', this.login.bind(this));
+        if (this.processButton) {
+            this.processButton.addEventListener('click', this.login.bind(this));
+        }
     }
 
-    validateField(field, element) {
-        if (!element.value || !element.value.match(field.regex)) {
+    private validateField(field: FieldsInputType, element: HTMLInputElement): boolean {
+        if (!element.value || !element.value.match((field.regex as RegExp))) {
             element.classList.add('is-invalid');
             field.valid = false;
         } else {
@@ -54,14 +62,16 @@ export class Login {
         return field.valid;
     }
 
-    async login() {
-        this.commonErrorElement.style.display = 'none';
-        if (this.validateField) {
+    private async login(): Promise<any> {
+        if (this.commonErrorElement) {
+            this.commonErrorElement.style.display = 'none';
+        }
+        if ((this.validateField)) {
 
             const loginResult = await AuthService.logIn({
-                email: this.fields.find( field => field.id === 'emailInput').element.value,
-                    password: this.fields.find( field => field.id === 'passwordInput').element.value,
-                    rememberMe: this.rememberMeElement.checked,
+                email: this.fields.find(field => field.id === 'emailInput').element.value,
+                password: this.fields.find(field => field.id === 'passwordInput').element.value,
+                rememberMe: (this.rememberMeElement as HTMLInputElement).checked,
             });
 
             if (loginResult) {
@@ -75,8 +85,9 @@ export class Login {
                 return this.openNewRoute('/');
             }
 
-            this.commonErrorElement.style.display = 'block';
-
+            if (this.commonErrorElement) {
+                this.commonErrorElement.style.display = 'block';
+            }
         }
     }
 }

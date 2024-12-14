@@ -3,9 +3,14 @@ import {EXPENSES} from "../../../config/config";
 import {ExpensesService} from "../service/expenses-service";
 import {IncomeService} from "../service/income-service";
 import {OperationsService} from "../service/operations-service";
+import {AllOperationsType} from "../../types/allOperations.type";
+import {ApiEnum} from "../../types/api.enum";
+import {ExpenseResponseType} from "../../types/expense-response.type";
 
 export class DeleteExpense {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    readonly idCategory: string | null;
+    constructor(openNewRoute: any) {
 
         this.openNewRoute = openNewRoute;
 
@@ -17,14 +22,14 @@ export class DeleteExpense {
         this.init().then();
     }
 
-    async init() {
-        const allOperations = await this.getOperations();
+    private async init(): Promise<void> {
+        const allOperations: AllOperationsType[] = await this.getOperations();
 
         const titleDeletedCategory = await this.getCategory();
 
-        const idOperations = [];
+        const idOperations: number[] = [];
 
-        allOperations.forEach(item => {
+        allOperations.forEach((item: AllOperationsType) => {
             if (String(item.category) === String(titleDeletedCategory)) {
                 idOperations.push(item.id);
             }
@@ -45,8 +50,11 @@ export class DeleteExpense {
         return this.openNewRoute(EXPENSES);
     }
 
-    async getCategory() {
-        const result = await ExpensesService.getExpense(this.idCategory)
+    private async getCategory(): Promise<string> {
+        let result: ApiEnum | ExpenseResponseType;
+        if (this.idCategory) {
+            result = await ExpensesService.getExpense(this.idCategory)
+        }
 
         return result.expense.title;
     }
