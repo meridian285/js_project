@@ -1,16 +1,23 @@
 import {HttpUtils} from "../../utils/http-utils";
-import {DELETE, DELETE_INCOME, GET_CATEGORIES_INCOME, POST, PUT} from "../../../config/config";
+import {ApiEnum} from "../../types/api.enum";
+import {ResultHttpUtilsType} from "../../types/result-httpUtils.type";
+import {GetIncomesResponseType} from "../../types/incomes/get-incomes-response.type";
+import {GetIncomeResponseType} from "../../types/incomes/get-income-response.type";
+import {UpdateIncomeResponseType} from "../../types/incomes/update-income-response.type";
+import {MethodEnum} from "../../types/method-enum";
+import {CreateIncomeResponseType} from "../../types/incomes/create-income-response.type";
+import {DeleteIncomeResponseType} from "../../types/incomes/delete-income-response.type";
 
 export class IncomeService{
 
-    static async getIncomes() {
-        const returnObject = {
+    public static async getIncomes(): Promise<GetIncomesResponseType | ApiEnum> {
+        const returnObject: GetIncomesResponseType = {
             error: false,
             redirect: null,
             incomes: null,
         }
 
-        const result = await HttpUtils.request(GET_CATEGORIES_INCOME);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.GET_CATEGORIES_INCOME);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при запросе категорий доходов';
@@ -24,14 +31,14 @@ export class IncomeService{
         return returnObject;
     }
 
-    static async getIncome(id) {
-        const returnObject = {
+    static async getIncome(id: string): Promise<ApiEnum | GetIncomeResponseType> {
+        const returnObject: GetIncomeResponseType = {
             error: false,
             redirect: null,
             income: null,
         };
 
-        const result = await HttpUtils.request(GET_CATEGORIES_INCOME + '/' + id);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.GET_CATEGORIES_INCOME + '/' + id);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при запросе категории дохода';
@@ -44,14 +51,14 @@ export class IncomeService{
         return returnObject;
     }
 
-    static async updateIncome(id, data) {
-        const returnObject = {
+    static async updateIncome(id: number, data: { title: string }): Promise<ApiEnum | UpdateIncomeResponseType> {
+        const returnObject: UpdateIncomeResponseType = {
             error: false,
             redirect: null,
             title: null,
         };
 
-        const result = await HttpUtils.request(GET_CATEGORIES_INCOME + '/' + id, PUT, true, data);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.GET_CATEGORIES_INCOME + '/' + id, MethodEnum.PUT, true, data);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при изменении категории дохода';
@@ -65,14 +72,14 @@ export class IncomeService{
         return returnObject;
     }
 
-    static async createIncome(data) {
-        const returnObject = {
+    static async createIncome(data: any): Promise<ApiEnum | CreateIncomeResponseType> {
+        const returnObject: CreateIncomeResponseType = {
             error: false,
             redirect: null,
             title: null,
         };
 
-        const result = await HttpUtils.request(GET_CATEGORIES_INCOME, POST, true, data);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.GET_CATEGORIES_INCOME, MethodEnum.POST, true, data);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при добавлении категории дохода';
@@ -86,14 +93,14 @@ export class IncomeService{
         return returnObject;
     }
 
-    static async deleteIncome(id) {
-        const returnObject = {
+    static async deleteIncome(id: string): Promise<ApiEnum | DeleteIncomeResponseType> {
+        const returnObject: DeleteIncomeResponseType = {
             error: false,
             redirect: null,
             title: null,
         };
 
-        const result = await HttpUtils.request(GET_CATEGORIES_INCOME + '/' + id, DELETE, true);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.GET_CATEGORIES_INCOME + '/' + id, MethodEnum.DELETE, true);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при удалении категории дохода';

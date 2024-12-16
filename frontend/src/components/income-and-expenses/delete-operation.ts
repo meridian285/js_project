@@ -1,26 +1,29 @@
 import {UrlUtils} from "../service/url-utils";
 import {OPERATIONS} from "../../../config/config";
 import {OperationsService} from "../service/operations-service";
+import {ApiEnum} from "../../types/api.enum";
+import {OperationsReturnType} from "../../types/operations-return.type";
 
 export class DeleteOperation {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
-        const id = UrlUtils.getUrlParam('id');
+        const id: string | null = UrlUtils.getUrlParam('id');
         if (!id) {
-            return this.openNewRoute('/');
+            return this.openNewRoute(ApiEnum.DASHBOARD);
         }
 
         this.deleteOperation(id).then();
     }
 
-    async deleteOperation(id) {
-        const response = await OperationsService.deleteOperation(id);
+    private async deleteOperation(id: string): Promise<void | ApiEnum | null> {
+        const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(id);
 
-        if (response.error) {
-            return response.redirect ? this.openNewRoute(response.redirect) : null;
+        if (((response as OperationsReturnType).error as boolean)) {
+            return (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
         }
 
-        return this.openNewRoute(OPERATIONS);
+        return this.openNewRoute(ApiEnum.OPERATIONS);
     }
 }

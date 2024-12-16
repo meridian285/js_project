@@ -2,20 +2,23 @@ import {OperationsService} from "../service/operations-service";
 import {UrlUtils} from "../service/url-utils";
 import {IncomeService} from "../service/income-service";
 import {ExpensesService} from "../service/expenses-service";
-import {OPERATIONS} from "../../../config/config";
-import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {ApiEnum} from "../../types/api.enum";
+import {OperationReturnType} from "../../types/operation-return.type";
+import {ExpensesResponse, GetExpensesResponseType} from "../../types/get-expenses-response.type";
+import {GetIncomesResponseType, IncomesResponse} from "../../types/incomes/get-incomes-response.type";
+import {ExpenseResponse} from "../../types/get-expense-response.type";
 
 export class EditOperation {
     readonly openNewRoute: any;
-    readonly typeSelectElement: HTMLSelectElement | null;
-    private categorySelectElement: HTMLSelectElement | null = null;
-    private amountInputElement: HTMLInputElement | null = null;
-    private dateInputElement: HTMLInputElement | null = null;
-    private commentInputElement: HTMLInputElement | null;
+    readonly typeSelectElement: HTMLElement | null;
+    readonly categorySelectElement: HTMLElement | null = null;
+    private amountInputElement: HTMLElement | null;
+    private dateInputElement: HTMLElement | null;
+    private commentInputElement: HTMLElement | null;
     readonly saveButtonElement: HTMLElement | null;
     private getResult: OperationResponseType | undefined | null;
+
     constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
@@ -58,69 +61,63 @@ export class EditOperation {
             category_id: Number((this.categorySelectElement as HTMLSelectElement).value),
         });
 
-        this.openNewRoute(OPERATIONS);
+        this.openNewRoute(ApiEnum.OPERATIONS);
     }
 
     private async getOperation(id: string): Promise<void> {
-        const result: OperationsReturnType = await OperationsService.getOperation(id);
-        this.getResult = result.operations;
-        this.showOperation(result.operations);
+        const result: OperationReturnType | ApiEnum = await OperationsService.getOperation(id);
+        this.getResult = (result as OperationReturnType).operation;
+        this.showOperation(((result as OperationReturnType).operation as OperationResponseType));
     }
 
-    private showOperation(operation): void {
+    private showOperation(operation: OperationResponseType): void {
         if (this.typeSelectElement) {
-            this.typeSelectElement.value = operation.type;
+            (this.typeSelectElement as HTMLSelectElement).value = operation.type;
         }
 
-        if (this.typeSelectElement.value === 'expense') {
+        if ((this.typeSelectElement as HTMLSelectElement).value === 'expense') {
             this.addCategoryList(this.getExpenses(), operation);
         } else {
             this.addCategoryList(this.getIncomes(), operation);
         }
 
-        this.amountInputElement.value = operation.amount;
-        this.dateInputElement.value = operation.date;
-        this.commentInputElement.value = operation.comment;
+        (this.amountInputElement as HTMLInputElement).value = String(operation.amount);
+        (this.dateInputElement as HTMLInputElement).value = operation.date;
+        (this.commentInputElement as HTMLInputElement).value = operation.comment;
     }
 
-    async getIncomes() {
-        const result = await IncomeService.getIncomes();
+    async getIncomes(): Promise<IncomesResponse[] | null> {
+        const result: GetIncomesResponseType | ApiEnum = await IncomeService.getIncomes();
 
-        return result.incomes
+        return (result as GetIncomesResponseType).incomes
     }
 
-    async getExpenses() {
-        const result = await ExpensesService.getExpenses();
+    async getExpenses(): Promise<ExpensesResponse[] | null> {
+        const result: GetExpensesResponseType | ApiEnum = await ExpensesService.getExpenses();
 
-        return result.expenses
+        return (result as GetExpensesResponseType).expenses
     }
 
-    async addCategoryList(category, operation = null) {
-        const result = await category;
+    async addCategoryList(category: Promise<ExpensesResponse[] | null>, operation: OperationResponseType | null = null): Promise<void> {
+        const result: ExpenseResponse[] | null = await category;
         this.deleteOptions();
 
-        // if (operation === null){
-        //     result.forEach(item => {
-        //         const option = document.createElement('option');
-        //         option.setAttribute('value', item.id)
-        //         option.innerText = item.title;
-        //         this.categorySelectElement.appendChild(option);
-        //     });
-        // } else {
-            result.forEach(item => {
-                const option = document.createElement('option');
-                option.setAttribute('value', item.id)
-                option.innerText = item.title;
-                if (operation !== null && item.title === operation.category) {
-                        option.selected = true;
-                }
+        (result as ExpenseResponse[]).forEach((item: ExpenseResponse) => {
+            const option: HTMLOptionElement = document.createElement('option');
+            option.setAttribute('value', String(item.id))
+            option.innerText = item.title;
+            if (operation !== null && item.title === operation.category) {
+                option.selected = true;
+            }
+            if (this.categorySelectElement) {
                 this.categorySelectElement.appendChild(option);
-            });
+            }
+        });
         // }
     }
 
     deleteOptions() {
-        const optionList = this.categorySelectElement.querySelectorAll('option');
-        optionList.forEach(item => item.remove());
+        const optionList: NodeListOf<HTMLOptionElement> = (this.categorySelectElement as HTMLSelectElement).querySelectorAll('option');
+        optionList.forEach((item: HTMLOptionElement) => item.remove());
     }
 }

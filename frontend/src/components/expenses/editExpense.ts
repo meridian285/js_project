@@ -1,7 +1,7 @@
 import {UrlUtils} from "../service/url-utils";
 import {ExpensesService} from "../service/expenses-service";
 import {ApiEnum} from "../../types/api.enum";
-import {ExpenseResponse, ExpenseResponseType} from "../../types/expense-response.type";
+import {ExpenseResponse, GetExpenseResponseType} from "../../types/get-expense-response.type";
 
 export class EditExpense {
     readonly openNewRoute: any;
@@ -27,12 +27,12 @@ export class EditExpense {
     }
 
     private async getExpense(id: string): Promise<void> {
-        const result: ApiEnum | ExpenseResponseType = await ExpensesService.getExpense(id);
+        const result: ApiEnum | GetExpenseResponseType = await ExpensesService.getExpense(id);
 
-        this.getIncomeResult = (result as ExpenseResponseType).expense;
+        this.getIncomeResult = (result as GetExpenseResponseType).expense;
 
         if (this.inputNameElement) {
-            (this.inputNameElement as HTMLInputElement).value = ((result as ExpenseResponseType).expense as ExpenseResponse).title;
+            (this.inputNameElement as HTMLInputElement).value = ((result as GetExpenseResponseType).expense as ExpenseResponse).title;
         }
     }
 

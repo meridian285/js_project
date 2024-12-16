@@ -1,25 +1,21 @@
 import {HttpUtils} from "../../utils/http-utils";
-import {
-    DELETE,
-    OPERATIONS,
-    POST,
-    PUT
-} from "../../../config/config";
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {ApiEnum} from "../../types/api.enum";
 import {MethodEnum} from "../../types/method-enum";
 import {OperationUpdateDataType} from "../../types/operation-update-data.type";
+import {ResultHttpUtilsType} from "../../types/result-httpUtils.type";
+import {OperationReturnType} from "../../types/operation-return.type";
 
 export class OperationsService {
 
-    public static async getOperation(id: string): Promise<OperationsReturnType> {
-        const returnObject: OperationsReturnType = {
+    public static async getOperation(id: string): Promise<OperationReturnType | ApiEnum> {
+        const returnObject: OperationReturnType = {
             error: false,
             redirect: null,
-            operations : null,
+            operation : null,
         };
 
-        const result = await HttpUtils.request(OPERATIONS + ApiEnum.DASHBOARD + id);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.OPERATIONS + ApiEnum.DASHBOARD + id);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при запросе операции';
@@ -28,18 +24,18 @@ export class OperationsService {
             }
             return returnObject;
         }
-        returnObject.operations = result.response;
+        returnObject.operation = result.response;
         return returnObject;
     }
 
-    public static async getOperationWithFilter(dateInterval: string): Promise<OperationsReturnType> {
+    public static async getOperationWithFilter(dateInterval: string): Promise<OperationsReturnType | ApiEnum> {
         const returnObject: OperationsReturnType = {
             error: false,
             redirect: null,
             operations: null,
         };
 
-        const result = await HttpUtils.request(OPERATIONS + dateInterval);
+        const result = await HttpUtils.request(ApiEnum.OPERATIONS + dateInterval);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при запросе операции';
@@ -53,14 +49,14 @@ export class OperationsService {
         return returnObject;
     }
 
-    public static async updateOperation(id: number, data: OperationUpdateDataType): Promise<OperationsReturnType> {
-        const returnObject: OperationsReturnType = {
+    public static async updateOperation(id: number, data: OperationUpdateDataType): Promise<OperationReturnType | ApiEnum> {
+        const returnObject: OperationReturnType = {
             error: false,
             redirect: null,
-            operations: null,
+            operation: null,
         };
 
-        const result = await HttpUtils.request(OPERATIONS + ApiEnum.DASHBOARD + id, MethodEnum.PUT, true, data);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.OPERATIONS + '/' + id, MethodEnum.PUT, true, data);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при изменении операции';
@@ -70,18 +66,18 @@ export class OperationsService {
             return returnObject;
         }
 
-        returnObject.operations = result.response;
+        returnObject.operation = result.response;
         return returnObject;
     }
 
-    static async createOperation(data) {
+    static async createOperation(data: any): Promise<OperationsReturnType | ApiEnum> {
         const returnObject: OperationsReturnType = {
             error: false,
             redirect: null,
             operations: null,
         };
 
-        const result = await HttpUtils.request(OPERATIONS, MethodEnum.POST, true, data);
+        const result = await HttpUtils.request(ApiEnum.OPERATIONS, MethodEnum.POST, true, data);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при добавлении операции';
@@ -95,14 +91,14 @@ export class OperationsService {
         return returnObject;
     }
 
-    static async deleteOperation(id) {
+    public static async deleteOperation(id: string): Promise<OperationsReturnType | ApiEnum> {
         const returnObject: OperationsReturnType = {
             error: false,
             redirect: null,
             operations: null,
         };
 
-        const result = await HttpUtils.request(OPERATIONS + ApiEnum.DASHBOARD + id, MethodEnum.DELETE, true);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.OPERATIONS + ApiEnum.DASHBOARD + id, MethodEnum.DELETE, true);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при удалении операции';

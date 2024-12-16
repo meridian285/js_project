@@ -1,12 +1,12 @@
 import {ApiEnum} from "./api.enum";
 
-export type ExpensesResponseType = {
+export type CreateExpenseResponseType = {
     error: false | string,
     redirect: null | ApiEnum,
-    expenses: ExpensesResponse | null,
+    expense: ExpenseResponse | null,
 }
 
-export type ExpensesResponse = {
+export type ExpenseResponse = {
     id: number,
     title: string,
 }

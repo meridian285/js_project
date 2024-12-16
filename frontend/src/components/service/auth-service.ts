@@ -1,10 +1,15 @@
 import {HttpUtils} from "../../utils/http-utils";
-import {LOGIN, LOGOUT, POST, SIGNUP} from "../../../config/config";
+import {ApiEnum} from "../../types/api.enum";
+import {MethodEnum} from "../../types/method-enum";
+import {LoginFieldsType} from "../../types/login-fields.type";
+import {SignUpFieldsType} from "../../types/signUp-fields.type";
+import {LogoutDataTypes} from "../../types/logout-data.types";
+import {ResultHttpUtilsType} from "../../types/result-httpUtils.type";
 
 export class AuthService {
 
-    static async logIn(data) {
-        const result = await HttpUtils.request(LOGIN, POST, false, data);
+    public static async logIn(data: LoginFieldsType): Promise<any> {
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.LOGIN, MethodEnum.POST, false, data);
 
         if (result.error || !result.response || (result.response && (!result.response.tokens.accessToken ||
             !result.response.tokens.refreshToken || !result.response.user.id || !result.response.user.name))) {
@@ -13,8 +18,8 @@ export class AuthService {
         return result.response;
     }
 
-    static async signUp(data) {
-        const result = await HttpUtils.request(SIGNUP, POST, false, data);
+    public static async signUp(data: SignUpFieldsType): Promise<any> {
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.SIGNUP, MethodEnum.POST, false, data);
 
         if (result.error || !result.response || (result.response && (!result.response.user.id ||
             !result.response.user.email || !result.response.user.name || !result.response.user.lastName))) {
@@ -25,7 +30,7 @@ export class AuthService {
         return result.response;
     }
 
-    static async logOut(data) {
-        await HttpUtils.request(LOGOUT, POST, false, data);
+    static async logOut(data: LogoutDataTypes): Promise<void> {
+        await HttpUtils.request(ApiEnum.LOGOUT, MethodEnum.POST, false, data);
     }
 }

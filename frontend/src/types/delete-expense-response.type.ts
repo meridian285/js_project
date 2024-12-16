@@ -1,9 +1,9 @@
 import {ApiEnum} from "./api.enum";
 
-export type ExpenseResponseType = {
+export type DeleteExpenseResponseType = {
     error: false | string,
     redirect: null | ApiEnum,
-    expense: ExpenseResponse | null,
+    response: ExpenseResponse | null,
 }
 
 export type ExpenseResponse = {

@@ -1,8 +1,13 @@
-import {INCOME} from "../../../config/config";
 import {IncomeService} from "../service/income-service";
+import {FieldsInputType} from "../../types/fields-input.type";
+import {ApiEnum} from "../../types/api.enum";
 
 export class CreateIncome {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    private inputNameElement: HTMLElement | null = null;
+    readonly saveButtonElement: HTMLElement | null;
+    private fields: FieldsInputType[];
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         this.inputNameElement = document.getElementById('inputName');
@@ -19,25 +24,27 @@ export class CreateIncome {
         ];
 
         const that = this;
-        this.fields.forEach(item => {
-            item.element = document.getElementById(item.id);
-            item.element.addEventListener('change', (event) => {
-                that.validateField.call(that, item, event.target);
+        this.fields.forEach((item: FieldsInputType) => {
+            (item.element as HTMLElement | null) = document.getElementById(item.id);
+            (item.element as HTMLElement).addEventListener('change', (event) => {
+                that.validateField.call(that, item, (event.target as HTMLInputElement));
             });
 
-            item.element.addEventListener('blur', (event) => {
-                that.validateField.call(that, item, event.target);
+            (item.element as HTMLElement).addEventListener('blur', (event) => {
+                that.validateField.call(that, item, (event.target as HTMLInputElement));
             });
 
             if (item.id === 'inputName') {
-                item.element.focus();
+                (item.element as HTMLElement).focus();
             }
         });
 
-        this.saveButtonElement.addEventListener('click', this.createIncome.bind(this))
+        if (this.saveButtonElement) {
+            this.saveButtonElement.addEventListener('click', this.createIncome.bind(this))
+        }
     }
 
-    validateField(field, element) {
+    private validateField(field: FieldsInputType, element: HTMLInputElement): boolean {
         if (field.id === 'inputName') {
             element.addEventListener('input', function () {
                 element.value = element.value.replace(/^\s/, '');
@@ -55,17 +62,22 @@ export class CreateIncome {
         return field.valid;
     }
 
-    async createIncome(e) {
+    private async createIncome(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault();
 
-        if (this.validateField) {
+        if ((this.validateField)) {
 
             await IncomeService.createIncome({
-                title: this.inputNameElement.value
+                title: (this.inputNameElement as HTMLInputElement).value
             })
 
-            document.getElementById('form').reset();
-            this.openNewRoute(INCOME);
+            const formElement: HTMLElement | null = document.getElementById('form');
+
+            if (formElement) {
+                (formElement as HTMLFormElement).reset();
+            }
+
+            this.openNewRoute(ApiEnum.INCOME);
         }
     }
 }

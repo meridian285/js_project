@@ -1,4 +1,4 @@
-export type LoginDataType = {
+export type LoginFieldsType = {
     email: string,
     password: string,
     rememberMe: boolean,

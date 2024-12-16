@@ -1,28 +1,30 @@
-import {GET_CATEGORIES_INCOME, INCOME_EDIT} from "../../../config/config";
 import {IncomeService} from "../service/income-service";
+import {ApiEnum} from "../../types/api.enum";
+import {GetIncomesResponseType, IncomesResponse} from "../../types/incomes/get-incomes-response.type";
 
 export class Income {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         this.getCards().then();
     }
 
-    async getCards() {
-        const response = await IncomeService.getIncomes(GET_CATEGORIES_INCOME);
+    private async getCards()  {
+        const response: ApiEnum | GetIncomesResponseType = await IncomeService.getIncomes();
 
-        if (response.error) {
-            return response.redirect ? this.openNewRoute(response.redirect) : null;
+        if ((response as GetIncomesResponseType).error) {
+            return (response as GetIncomesResponseType).redirect ? this.openNewRoute((response as GetIncomesResponseType).redirect) : null;
         }
 
-        this.showCards(response.incomes)
+        this.showCards((response as GetIncomesResponseType).incomes as IncomesResponse[]);
     }
 
-    showCards(getCards) {
-        const newCard = document.getElementById('newCard');
+    private showCards(getCards: IncomesResponse[]): void {
+        const newCard: HTMLElement | null = document.getElementById('newCard');
 
-        getCards.forEach(item => {
-            const cardElement = document.createElement('div');
+        getCards.forEach((item: IncomesResponse) => {
+            const cardElement: HTMLDivElement = document.createElement('div');
             cardElement.classList.add('card');
             cardElement.classList.add('h3');
             cardElement.classList.add('p-3');
@@ -31,12 +33,15 @@ export class Income {
             cardElement.innerHTML = `
                     ${item.title}
                 <div class="action pt-3">
-                    <a href="${INCOME_EDIT}?id=${item.id}"  class="btn btn-primary">Редактировать</a>
+                    <a href="${ApiEnum.INCOME_EDIT}?id=${item.id}"  class="btn btn-primary">Редактировать</a>
                     <a href="#" onclick="handler_delete_income(this)" class="delete-card btn btn-danger" id="btn-${item.id}" data-bs-toggle="modal"
                        data-bs-target="#exampleModal">Удалить</a>
                 </div>
             `;
-            newCard.before(cardElement);
+
+            if (newCard) {
+                newCard.before(cardElement);
+            }
         });
     }
 }

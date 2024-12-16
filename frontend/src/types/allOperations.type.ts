@@ -5,4 +5,4 @@ export type AllOperationsType = {
     amount: number,
     date: string,
     comment: string,
-}[]
+}

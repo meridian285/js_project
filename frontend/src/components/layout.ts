@@ -1,13 +1,14 @@
 import {HttpUtils} from "../utils/http-utils";
 import {BALANCE} from "../../config/config";
 import {AuthUtils} from "../utils/auth-utils";
+import {ResultHttpUtilsType} from "../types/result-httpUtils.type";
 
 export class Layout {
 
-    static async getBalance(openNewRoute) {
-        const balanceElement = document.getElementById('balance');
+    public static async getBalance(openNewRoute: any) {
+        const balanceElement: HTMLElement | null = document.getElementById('balance');
 
-        const response = await HttpUtils.request(BALANCE)
+        const response: ResultHttpUtilsType = await HttpUtils.request(BALANCE)
 
         if (response.error) {
             return response.redirect ? openNewRoute(response.redirect) : null;
@@ -18,15 +19,19 @@ export class Layout {
         }
     }
 
-    static showUserName() {
-        const userName = document.getElementById('userName');
-        const userLastName = document.getElementById('userLastName');
+    public static showUserName(): void {
+        const userName: HTMLElement | null = document.getElementById('userName');
+        const userLastName: HTMLElement | null = document.getElementById('userLastName');
 
-        const userInfo = JSON.parse(AuthUtils.getAuthInfo(AuthUtils.userInfoKey))
+        const userInfo = JSON.parse(<string>AuthUtils.getAuthInfo(AuthUtils.userInfoKey));
 
         if (userInfo) {
-            userName.innerText = userInfo.name + ' ';
-            userLastName.innerText = userInfo.lastName;
+            if (userName) {
+                userName.innerText = userInfo.name + ' ';
+            }
+            if (userLastName) {
+                userLastName.innerText = userInfo.lastName;
+            }
         }
     }
 }

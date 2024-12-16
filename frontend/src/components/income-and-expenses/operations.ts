@@ -1,9 +1,16 @@
 import {Layout} from "../layout";
 import {OperationsService} from "../service/operations-service";
 import {EDIT_OPERATION} from "../../../config/config";
+import {ApiEnum} from "../../types/api.enum";
+import {OperationsReturnType} from "../../types/operations-return.type";
+import {OperationResponseType} from "../../types/operation-response.type";
 
 export class Operations {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    readonly table: HTMLElement | null;
+    private startDateInput: HTMLElement | null ;
+    private endDateInput: HTMLElement | null;
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         this.table = document.getElementById('dataTable');
@@ -15,7 +22,7 @@ export class Operations {
 
         this.content();
 
-        let url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
+        let url: string = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
         const dateInterval = document.querySelectorAll('.select-interval');
         dateInterval.forEach(item => {
             item.addEventListener('click', () => {
@@ -34,7 +41,7 @@ export class Operations {
                             url = '?period=all';
                             break;
                         case 'interval':
-                            url = `?period=interval&dateFrom=${this.startDateInput.value}&dateTo=${this.endDateInput.value}`;
+                            url = `?period=interval&dateFrom=${(this.startDateInput as HTMLInputElement).value}&dateTo=${(this.endDateInput as HTMLInputElement).value}`;
                             break;
                         default:
                             url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
@@ -46,33 +53,33 @@ export class Operations {
         this.getData(url).then();
     }
 
-    async getData(url) {
+    private async getData(url: string): Promise<void | OperationsReturnType | ApiEnum | null> {
 
-        const response = await OperationsService.getOperationWithFilter(url);
+        const response: ApiEnum | OperationsReturnType = await OperationsService.getOperationWithFilter(url);
 
-        if (response.error) {
-            return response.redirect ? this.openNewRoute(response.redirect) : null;
+        if ((response as OperationsReturnType).error) {
+            return (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
         }
 
-        this.showTable(response.operations);
+        this.showTable(((response as OperationsReturnType).operations as OperationResponseType[]));
     }
 
-    showTable(operations) {
+    private showTable(operations: OperationResponseType[]): void {
         if (this.table) {
             this.table.innerHTML = '';
         }
 
-        operations.forEach((item, index) => {
-            const dateFormat = new Date(item.date);
+        operations.forEach((item: OperationResponseType, index: number) => {
+            const dateFormat: Date = new Date(item.date);
 
-            let color = 'text-success';
-            let typeValue = 'доход';
+            let color: string = 'text-success';
+            let typeValue: string = 'доход';
             if (item.type === 'expense') {
                 color = 'text-danger';
                 typeValue = 'расход';
             }
 
-            const trElement = document.createElement('tr');
+            const trElement: HTMLTableRowElement = document.createElement('tr');
             trElement.innerHTML = `
                     <th scope="row">${index + 1}</th>
                     <td class="${color}">${typeValue}</td>
@@ -85,20 +92,22 @@ export class Operations {
                             <img src="../images/cart.png" alt="Корзина">
                         </a>
                         
-                        <a href="${EDIT_OPERATION}?id=${item.id}">
+                        <a href="${ApiEnum.EDIT_OPERATION}?id=${item.id}">
                             <img href="" src="../images/edit.png" alt="Изменить">
                         </a>
                     </td>
             `;
-            this.table.appendChild(trElement);
+            if (this.table) {
+                this.table.appendChild(trElement);
+            }
         });
     }
 
-    content() {
-        const selectInterval = document.querySelectorAll('.select-interval');
+    private content(): void {
+        const selectInterval: NodeListOf<Element> = document.querySelectorAll('.select-interval');
         // Выбор временного интервала
         if (selectInterval) {
-            selectInterval.forEach(item =>
+            selectInterval.forEach((item: Element) =>
                 item.addEventListener('click', event => {
                     if (event) {
                         selectInterval.forEach(item => item.classList.remove('active'));

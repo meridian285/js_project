@@ -3,12 +3,23 @@ import {ExpensesService} from "../service/expenses-service";
 import {OperationsService} from "../service/operations-service";
 import {OPERATIONS} from "../../../config/config";
 import {UrlUtils} from "../service/url-utils";
+import {ApiEnum} from "../../types/api.enum";
+import {GetIncomesResponseType} from "../../types/incomes/get-incomes-response.type";
+import {ExpensesResponse, GetExpensesResponseType} from "../../types/get-expenses-response.type";
 
 export class CreateOperation {
-    constructor(openNewRoute) {
+    readonly openNewRoute: any;
+    readonly typeSelectElement: HTMLElement | null;
+    private categorySelectElement: HTMLElement | null;
+    private saveButtonElement: HTMLElement | null;
+    private amountInputElement: HTMLElement | null;
+    private dateInputElement: HTMLElement | null;
+    private commentInputElement: HTMLElement | null;
+
+    constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
-        const type = UrlUtils.getUrlParam('type');
+        const type: string | null = UrlUtils.getUrlParam('type');
 
         this.typeSelectElement = document.getElementById('type');
         this.categorySelectElement = document.getElementById('category');
@@ -17,60 +28,71 @@ export class CreateOperation {
         this.dateInputElement = document.getElementById('start-date');
         this.commentInputElement = document.getElementById('comment');
 
-        this.typeSelectElement.value = type;
+        if (this.typeSelectElement) {
+            if (typeof type === "string") {
+                (this.typeSelectElement as HTMLSelectElement).value = type;
+            }
 
-        if (this.typeSelectElement.value === 'expense') {
-            this.getExpenses().then();
-        } else {
-            this.getIncomes().then();
-        }
-
-        this.typeSelectElement.addEventListener('change', () => {
-            if (this.typeSelectElement.value === 'expense') {
+            if ((this.typeSelectElement as HTMLSelectElement).value === 'expense') {
                 this.getExpenses().then();
             } else {
                 this.getIncomes().then();
             }
-        });
 
-        this.saveButtonElement.addEventListener('click', this.setCategory.bind(this));
+            this.typeSelectElement.addEventListener('change', () => {
+                if ((this.typeSelectElement as HTMLSelectElement).value === 'expense') {
+                    this.getExpenses().then();
+                } else {
+                    this.getIncomes().then();
+                }
+            });
+        }
+
+
+        if (this.saveButtonElement) {
+            this.saveButtonElement.addEventListener('click', this.setCategory.bind(this));
+        }
     }
 
-    async setCategory() {
+    private async setCategory(): Promise<void> {
         await OperationsService.createOperation({
-            type: this.typeSelectElement.value,
-            amount: Number(this.amountInputElement.value),
-            date: this.dateInputElement.value,
-            comment: this.commentInputElement.value,
-            category_id: Number(this.categorySelectElement.value),
+            type: (this.typeSelectElement as HTMLSelectElement).value,
+            amount: Number((this.amountInputElement as HTMLInputElement).value),
+            date: (this.dateInputElement as HTMLInputElement).value,
+            comment: (this.commentInputElement as HTMLInputElement).value,
+            category_id: Number((this.categorySelectElement as HTMLSelectElement).value),
         });
 
-        this.openNewRoute(OPERATIONS);
+        this.openNewRoute(ApiEnum.OPERATIONS);
     }
 
-    async getIncomes() {
-        const result = await IncomeService.getIncomes();
+    private async getIncomes(): Promise<void> {
+        const result: GetIncomesResponseType | ApiEnum = await IncomeService.getIncomes();
         this.deleteOptions();
-        this.addCategoryList(result.incomes)
+        this.addCategoryList(((result as GetIncomesResponseType).incomes as ExpensesResponse[]))
     }
 
-    async getExpenses() {
-        const result = await ExpensesService.getExpenses();
+    private async getExpenses(): Promise<void> {
+        const result:GetExpensesResponseType | ApiEnum = await ExpensesService.getExpenses();
         this.deleteOptions();
-        this.addCategoryList(result.expenses);
+        this.addCategoryList(((result as GetExpensesResponseType).expenses as ExpensesResponse[]));
     }
 
-    addCategoryList(category) {
-        category.forEach(item => {
-            const option = document.createElement('option');
-            option.setAttribute('value', item.id)
+    addCategoryList(category: ExpensesResponse[]): void {
+        category.forEach((item: ExpensesResponse) => {
+            const option: HTMLOptionElement = document.createElement('option');
+            option.setAttribute('value', String(item.id))
             option.innerText = item.title;
-            this.categorySelectElement.appendChild(option);
+            if (this.categorySelectElement) {
+                this.categorySelectElement.appendChild(option);
+            }
         });
     }
 
-    deleteOptions() {
-        const optionList = this.categorySelectElement.querySelectorAll('option');
-        optionList.forEach(item => item.remove());
+    private deleteOptions(): void {
+        if (this.categorySelectElement) {
+            const optionList: NodeListOf<HTMLOptionElement> = this.categorySelectElement.querySelectorAll('option');
+            optionList.forEach((item: HTMLOptionElement) => item.remove());
+        }
     }
 }

@@ -1,6 +1,7 @@
 import {EXPENSES} from "../../../config/config";
 import {ExpensesService} from "../service/expenses-service";
 import {FieldsInputType} from "../../types/fields-input.type";
+import {ApiEnum} from "../../types/api.enum";
 
 export class CreateExpense {
     readonly openNewRoute: any;
@@ -44,7 +45,7 @@ export class CreateExpense {
         }
     }
 
-    validateField(field: FieldsInputType, element: HTMLInputElement) {
+    private validateField(field: FieldsInputType, element: HTMLInputElement): boolean {
         if (field.id === 'inputName') {
             element.addEventListener('input', function () {
                 element.value = element.value.replace(/^\s/, '');
@@ -61,14 +62,14 @@ export class CreateExpense {
 
         return field.valid;
     }
-    async createIncome(e: { preventDefault: () => void; }) {
+    private async createIncome(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault();
 
         if ((this.validateField)) {
 
             await ExpensesService.createExpense({
                 title: (this.inputNameElement as HTMLInputElement).value
-            })
+            });
 
             const formElement: HTMLElement | null = document.getElementById('form');
 
@@ -76,7 +77,7 @@ export class CreateExpense {
                 (formElement as HTMLFormElement).reset();
             }
 
-            this.openNewRoute(EXPENSES);
+            this.openNewRoute(ApiEnum.EXPENSES);
         }
     }
 }

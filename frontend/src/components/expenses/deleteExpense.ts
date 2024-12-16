@@ -1,15 +1,18 @@
 import {UrlUtils} from "../service/url-utils";
 import {EXPENSES} from "../../../config/config";
 import {ExpensesService} from "../service/expenses-service";
-import {IncomeService} from "../service/income-service";
 import {OperationsService} from "../service/operations-service";
 import {AllOperationsType} from "../../types/allOperations.type";
 import {ApiEnum} from "../../types/api.enum";
-import {ExpenseResponseType} from "../../types/expense-response.type";
+import {ExpenseResponse, GetExpenseResponseType} from "../../types/get-expense-response.type";
+import {OperationsReturnType} from "../../types/operations-return.type";
+import {OperationResponseType} from "../../types/operation-response.type";
+import {DeleteExpenseResponseType} from "../../types/delete-expense-response.type";
 
 export class DeleteExpense {
     readonly openNewRoute: any;
     readonly idCategory: string | null;
+
     constructor(openNewRoute: any) {
 
         this.openNewRoute = openNewRoute;
@@ -25,7 +28,7 @@ export class DeleteExpense {
     private async init(): Promise<void> {
         const allOperations: AllOperationsType[] = await this.getOperations();
 
-        const titleDeletedCategory = await this.getCategory();
+        const titleDeletedCategory: string = await this.getCategory();
 
         const idOperations: number[] = [];
 
@@ -40,41 +43,37 @@ export class DeleteExpense {
         this.deleteExpenses().then();
     }
 
-    async deleteExpenses() {
-        const response = await ExpensesService.deleteExpense(this.idCategory);
+    private async deleteExpenses(): Promise<DeleteExpenseResponseType | ApiEnum | null> {
+        const response: ApiEnum | DeleteExpenseResponseType = await ExpensesService.deleteExpense((this.idCategory as string));
 
-        if (response.error) {
-            return response.redirect ? this.openNewRoute(response.redirect) : null;
+        if ((response as DeleteExpenseResponseType).error) {
+            return (response as DeleteExpenseResponseType).redirect ? this.openNewRoute((response as DeleteExpenseResponseType).redirect) : null;
         }
 
         return this.openNewRoute(EXPENSES);
     }
 
     private async getCategory(): Promise<string> {
-        let result: ApiEnum | ExpenseResponseType;
-        if (this.idCategory) {
-            result = await ExpensesService.getExpense(this.idCategory)
-        }
+        const result: ApiEnum | GetExpenseResponseType = await ExpensesService.getExpense((this.idCategory as string));
 
-        return result.expense.title;
+        return ((result as GetExpenseResponseType).expense as ExpenseResponse).title;
     }
 
-    async getOperations() {
-        const response = await OperationsService.getOperationWithFilter('?period=all');
+    private async getOperations(): Promise<OperationResponseType[]> {
+        const response: OperationsReturnType | ApiEnum = await OperationsService.getOperationWithFilter('?period=all');
 
-        const result = response.operations
+        const result: OperationResponseType[] | null = (response as OperationsReturnType).operations
 
-        return result.filter(item => item.type === 'expense');
+        return (result as OperationResponseType[] ).filter((item: OperationResponseType) => item.type === 'expense');
     }
 
-    async deleteOperation(id) {
-        id.forEach(item => {
-            const response = OperationsService.deleteOperation(item);
+    private async deleteOperation(id: number[]): Promise<void> {
+        for (const item of id) {
+            const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(item);
 
-            if (response.error) {
-                return response.redirect ? this.openNewRoute(response.redirect) : null;
+            if ((response as OperationsReturnType).error) {
+                (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
             }
-
-        })
+        }
     }
 }

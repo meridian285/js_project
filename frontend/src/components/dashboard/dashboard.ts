@@ -1,10 +1,12 @@
 import {OperationsService} from "../service/operations-service";
 import {Layout} from "../layout";
+import {ApiEnum} from "../../types/api.enum";
+import {OperationsReturnType} from "../../types/operations-return.type";
 
 export class Dashboard {
     readonly openNewRoute: any;
     private table: HTMLElement | null;
-    readonly startDateInput: HTMLInputElement;
+    readonly startDateInput: HTMLElement | null;
     readonly endDateInput: HTMLElement | null;
     readonly incomeDiagram: HTMLElement | null;
     readonly expensesDiagram: HTMLElement | null;
@@ -59,13 +61,13 @@ export class Dashboard {
     }
 
     private async getData(url: string): Promise<any> {
-        const response = await OperationsService.getOperationWithFilter(url);
+        const response: ApiEnum | OperationsReturnType = await OperationsService.getOperationWithFilter(url);
 
-        if (response.error) {
-            return response.redirect ? this.openNewRoute(response.redirect) : null;
+        if ((response as OperationsReturnType).error) {
+            return (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
         }
 
-        this.showDiagram(response.operations);
+        this.showDiagram((response as OperationsReturnType).operations);
     }
 
     private clearCanvas(element: HTMLElement): void {

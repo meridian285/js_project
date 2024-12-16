@@ -4,6 +4,11 @@ import {INCOME} from "../../../config/config";
 import {OperationsService} from "../service/operations-service";
 import {ApiEnum} from "../../types/api.enum";
 import {AllOperationsType} from "../../types/allOperations.type";
+import {DeleteExpenseResponseType} from "../../types/delete-expense-response.type";
+import {DeleteIncomeResponseType} from "../../types/incomes/delete-income-response.type";
+import {GetIncomeResponseType, IncomeResponse} from "../../types/incomes/get-income-response.type";
+import {OperationResponseType} from "../../types/operation-response.type";
+import {OperationsReturnType} from "../../types/operations-return.type";
 
 export class DeleteIncome {
     readonly openNewRoute: any;
@@ -24,12 +29,12 @@ export class DeleteIncome {
     private async init(): Promise<void> {
         const allOperations: AllOperationsType[] = await this.getOperations();
 
-        const titleDeletedCategory = await this.getCategory();
+        const titleDeletedCategory: string = await this.getCategory();
 
         const idOperations: number[] = [];
 
         allOperations.forEach((item: AllOperationsType) => {
-            if (String(item.category === String(titleDeletedCategory)) {
+            if (String(item.category) === String(titleDeletedCategory)) {
                 idOperations.push(item.id);
             }
         });
@@ -39,39 +44,39 @@ export class DeleteIncome {
         this.deleteIncome().then();
     }
 
-    private async deleteIncome(): Promise<void> {
-        const response = await IncomeService.deleteIncome(this.idCategory);
+    private async deleteIncome(): Promise<ApiEnum | DeleteExpenseResponseType> {
+        const response: ApiEnum | DeleteIncomeResponseType = await IncomeService.deleteIncome((this.idCategory as string));
 
-        if (response.error) {
-            return response.redirect ? this.openNewRoute(response.redirect) : null;
+        if ((response as DeleteIncomeResponseType).error) {
+            return (response as DeleteIncomeResponseType).redirect ? this.openNewRoute((response as DeleteIncomeResponseType).redirect) : null;
         }
 
-        return this.openNewRoute(INCOME);
+        return this.openNewRoute(ApiEnum.INCOME);
     }
 
     private async getCategory(): Promise<string> {
-        const result = await IncomeService.getIncome(this.idCategory)
+        const result: ApiEnum | GetIncomeResponseType = await IncomeService.getIncome((this.idCategory as string));
 
-        return result.income.title;
+        return ((result as GetIncomeResponseType).income as IncomeResponse).title;
     }
 
-    private async getOperations() {
-        const response = await OperationsService.getOperationWithFilter('?period=all');
+    private async getOperations(): Promise<OperationResponseType[]> {
+        const response: ApiEnum | OperationsReturnType = await OperationsService.getOperationWithFilter('?period=all');
 
-        const result = response.operations
+        const result = (response as OperationsReturnType).operations
 
-        return result.filter(item => item.type === 'income');
+        return (result as OperationResponseType[]).filter((item: OperationResponseType) => item.type === 'income');
     }
 
 
     async deleteOperation(id: number[]) {
-        id.forEach((item: number) => {
-            const response = OperationsService.deleteOperation(item);
+        for (const item of id) {
+            const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(item);
 
-            if (response.error) {
-                return response.redirect ? this.openNewRoute(response.redirect) : null;
+            if ((response as OperationsReturnType).error) {
+                (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
             }
 
-        })
+        }
     }
 }
