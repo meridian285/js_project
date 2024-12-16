@@ -2,6 +2,8 @@ import {OperationsService} from "../service/operations-service";
 import {Layout} from "../layout";
 import {ApiEnum} from "../../types/api.enum";
 import {OperationsReturnType} from "../../types/operations-return.type";
+import {OperationResponseType} from "../../types/operation-response.type";
+import {ChartDataType} from "../../types/chart-data.type";
 
 export class Dashboard {
     readonly openNewRoute: any;
@@ -48,7 +50,7 @@ export class Dashboard {
                             url = '?period=all';
                             break;
                         case 'interval':
-                            url = `?period=interval&dateFrom=${this.startDateInput ? ((this.startDateInput as HTMLInputElement).value) : null}&dateTo=${this.endDateInput ? this.endDateInput.value : null}`;
+                            url = `?period=interval&dateFrom=${this.startDateInput ? ((this.startDateInput as HTMLInputElement).value) : null}&dateTo=${this.endDateInput ? (this.endDateInput as HTMLInputElement).value : null}`;
                             break;
                         default:
                             url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
@@ -67,7 +69,7 @@ export class Dashboard {
             return (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
         }
 
-        this.showDiagram((response as OperationsReturnType).operations);
+        this.showDiagram(((response as OperationsReturnType).operations as OperationResponseType[]));
     }
 
     private clearCanvas(element: HTMLElement): void {
@@ -77,28 +79,32 @@ export class Dashboard {
     }
 
 
-    private showDiagram(data): void {
+    private showDiagram(data: OperationResponseType[]): void {
 
-        this.clearCanvas(this.incomeDiagram);
-        this.clearCanvas(this.expensesDiagram);
+        if (this.incomeDiagram) {
+            this.clearCanvas(this.incomeDiagram);
+        }
+        if (this.expensesDiagram) {
+            this.clearCanvas(this.expensesDiagram);
+        }
 
-        let incomeData = [];
-        let incomeDataName = [];
+        let incomeData: number[] = [];
+        let incomeDataName: string[] = [];
 
-        let expensesData = [];
-        let expensesDataName = [];
+        let expensesData: number[] = [];
+        let expensesDataName: string[] = [];
 
-        let newArray = [];
+        let newArray: ChartDataType[] = [];
         for (let i = 0; i < data.length; i++) {
-            if (newArray.length === 0 || !newArray.find(item => item.category === data[i].category)) {
+            if (newArray.length === 0 || !newArray.find((item: ChartDataType) => item.category === data[i].category)) {
                 newArray.push({type: data[i].type, category: data[i].category, amount: data[i].amount});
             } else {
-                let count = newArray.find(item => item.category === data[i].category);
-                count.amount = count.amount + data[i].amount
+                let count: ChartDataType | undefined = newArray.find((item: ChartDataType) => item.category === data[i].category);
+                (count as ChartDataType).amount = (count as ChartDataType).amount + data[i].amount
             }
         }
 
-        newArray.forEach(item => {
+        newArray.forEach((item: ChartDataType) => {
             if (item.type === 'expense') {
                 expensesData.push(item.amount)
                 expensesDataName.push(item.category)
@@ -237,17 +243,17 @@ export class Dashboard {
                 listMainMenu.forEach(items => items.classList.remove('active'));
                 item.classList.add('active');
 
-                if ((event.target.id as string) === 'menu-dropdown-link') {
+                if ((event.target as HTMLElement).id === 'menu-dropdown-link') {
                     if (dropdownMenuElement) {
                         dropdownMenuElement.style.borderColor = '#0D6EFD';
                     }
 
-                    if (event.target.classList.contains('collapsed')) {
-                        event.target.style.borderBottomLeftRadius = '5px';
-                        event.target.style.borderBottomRightRadius = '5px';
+                    if ((event.target as HTMLElement).classList.contains('collapsed')) {
+                        (event.target as HTMLElement).style.borderBottomLeftRadius = '5px';
+                        (event.target as HTMLElement).style.borderBottomRightRadius = '5px';
                     } else {
-                        event.target.style.borderBottomLeftRadius = '0';
-                        event.target.style.borderBottomRightRadius = '0';
+                        (event.target as HTMLElement).style.borderBottomLeftRadius = '0';
+                        (event.target as HTMLElement).style.borderBottomRightRadius = '0';
                     }
 
                 } else {

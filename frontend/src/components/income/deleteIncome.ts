@@ -1,6 +1,5 @@
 import {IncomeService} from "../service/income-service";
 import {UrlUtils} from "../service/url-utils";
-import {INCOME} from "../../../config/config";
 import {OperationsService} from "../service/operations-service";
 import {ApiEnum} from "../../types/api.enum";
 import {AllOperationsType} from "../../types/allOperations.type";
@@ -69,9 +68,9 @@ export class DeleteIncome {
     }
 
 
-    async deleteOperation(id: number[]) {
+    public async deleteOperation(id: number[]): Promise<void> {
         for (const item of id) {
-            const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(item);
+            const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(String(item));
 
             if ((response as OperationsReturnType).error) {
                 (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;
