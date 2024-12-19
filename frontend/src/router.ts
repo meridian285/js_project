@@ -19,8 +19,8 @@ import {RouteType} from "./types/route.type";
 import {ApiEnum} from "./types/api.enum";
 
 export class Router {
-    private titlePageElement: HTMLElement | null = null;
-    private contentPageElement: HTMLElement | null = null;
+    readonly titlePageElement: HTMLElement | null = null;
+    readonly contentPageElement: HTMLElement | null = null;
     readonly bootstrapStylesElement: HTMLElement | null = null;
     private routes: RouteType[];
 

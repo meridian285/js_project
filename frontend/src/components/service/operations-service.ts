@@ -2,9 +2,9 @@ import {HttpUtils} from "../../utils/http-utils";
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {ApiEnum} from "../../types/api.enum";
 import {MethodEnum} from "../../types/method-enum";
-import {OperationUpdateDataType} from "../../types/operation-update-data.type";
 import {ResultHttpUtilsType} from "../../types/result-httpUtils.type";
 import {OperationReturnType} from "../../types/operation-return.type";
+import {BodyOperationType} from "../../types/body-operation.type";
 
 export class OperationsService {
 
@@ -35,7 +35,7 @@ export class OperationsService {
             operations: null,
         };
 
-        const result = await HttpUtils.request(ApiEnum.OPERATIONS + dateInterval);
+        const result: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.OPERATIONS + dateInterval);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при запросе операции';
@@ -49,7 +49,7 @@ export class OperationsService {
         return returnObject;
     }
 
-    public static async updateOperation(id: number, data: OperationUpdateDataType): Promise<OperationReturnType | ApiEnum> {
+    public static async updateOperation(id: number, data: BodyOperationType): Promise<OperationReturnType | ApiEnum> {
         const returnObject: OperationReturnType = {
             error: false,
             redirect: null,
@@ -70,14 +70,14 @@ export class OperationsService {
         return returnObject;
     }
 
-    static async createOperation(data: any): Promise<OperationsReturnType | ApiEnum> {
+    static async createOperation(data: BodyOperationType): Promise<OperationsReturnType | ApiEnum> {
         const returnObject: OperationsReturnType = {
             error: false,
             redirect: null,
             operations: null,
         };
 
-        const result = await HttpUtils.request(ApiEnum.OPERATIONS, MethodEnum.POST, true, data);
+        const result:ResultHttpUtilsType = await HttpUtils.request(ApiEnum.OPERATIONS, MethodEnum.POST, true, data);
 
         if (result.redirect || result.error || !result.response && (result.response && (result.response.error || !result.response))) {
             returnObject.error = 'Ошибка при добавлении операции';

@@ -1,6 +1,5 @@
 import {Layout} from "../layout";
 import {OperationsService} from "../service/operations-service";
-import {EDIT_OPERATION} from "../../../config/config";
 import {ApiEnum} from "../../types/api.enum";
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";

@@ -1,4 +1,3 @@
-import {LOGIN, POST, SIGNUP} from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
 import {AuthService} from "../service/auth-service";
 import {ApiEnum} from "../../types/api.enum";
@@ -147,7 +146,7 @@ export class SignUp {
             });
 
             if (signUpResult) {
-                return this.openNewRoute(LOGIN);
+                return this.openNewRoute(ApiEnum.LOGIN);
             }
 
             if (this.commonErrorElement) {

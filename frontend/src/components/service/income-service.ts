@@ -7,6 +7,7 @@ import {UpdateIncomeResponseType} from "../../types/incomes/update-income-respon
 import {MethodEnum} from "../../types/method-enum";
 import {CreateIncomeResponseType} from "../../types/incomes/create-income-response.type";
 import {DeleteIncomeResponseType} from "../../types/incomes/delete-income-response.type";
+import {BodyCategoryType} from "../../types/body-category.type";
 
 export class IncomeService{
 
@@ -51,7 +52,7 @@ export class IncomeService{
         return returnObject;
     }
 
-    static async updateIncome(id: number, data: { title: string }): Promise<ApiEnum | UpdateIncomeResponseType> {
+    static async updateIncome(id: number, data: BodyCategoryType): Promise<ApiEnum | UpdateIncomeResponseType> {
         const returnObject: UpdateIncomeResponseType = {
             error: false,
             redirect: null,
@@ -72,7 +73,7 @@ export class IncomeService{
         return returnObject;
     }
 
-    static async createIncome(data: any): Promise<ApiEnum | CreateIncomeResponseType> {
+    static async createIncome(data: BodyCategoryType): Promise<ApiEnum | CreateIncomeResponseType> {
         const returnObject: CreateIncomeResponseType = {
             error: false,
             redirect: null,

@@ -1,5 +1,4 @@
 import {UrlUtils} from "../service/url-utils";
-import {EXPENSES} from "../../../config/config";
 import {ExpensesService} from "../service/expenses-service";
 import {OperationsService} from "../service/operations-service";
 import {AllOperationsType} from "../../types/allOperations.type";
@@ -50,7 +49,7 @@ export class DeleteExpense {
             return (response as DeleteExpenseResponseType).redirect ? this.openNewRoute((response as DeleteExpenseResponseType).redirect) : null;
         }
 
-        return this.openNewRoute(EXPENSES);
+        return this.openNewRoute(ApiEnum.EXPENSES);
     }
 
     private async getCategory(): Promise<string> {

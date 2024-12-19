@@ -4,17 +4,17 @@ import {ApiEnum} from "../../types/api.enum";
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {ChartDataType} from "../../types/chart-data.type";
+import {GenerateLabelsTypes} from "../../types/chartjs/generateLabels.types";
 
 export class Dashboard {
     readonly openNewRoute: any;
     private table: HTMLElement | null;
     readonly startDateInput: HTMLElement | null;
     readonly endDateInput: HTMLElement | null;
-    readonly incomeDiagram: HTMLElement | null;
+    readonly incomeDiagramElement: HTMLElement | null;
     readonly expensesDiagram: HTMLElement | null;
 
     // хотелось бы вот так записать, но такого класса нет, а файл Chart библиотечный как тут быть?
-    // private chart = new Chart;
     constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
@@ -22,7 +22,7 @@ export class Dashboard {
         this.startDateInput = document.getElementById('startDate');
         this.endDateInput = document.getElementById('endDate');
 
-        this.incomeDiagram = document.getElementById('income-diagram');
+        this.incomeDiagramElement = document.getElementById('income-diagram');
         this.expensesDiagram = document.getElementById('expenses-diagram');
 
         Layout.getBalance(this.openNewRoute).then();
@@ -31,7 +31,7 @@ export class Dashboard {
         this.content();
 
 
-        let url = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
+        let url: string = `?period=interval&dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`;
         const dateInterval = document.querySelectorAll('.select-interval');
         dateInterval.forEach(item => {
             item.addEventListener('click', () => {
@@ -72,17 +72,17 @@ export class Dashboard {
         this.showDiagram(((response as OperationsReturnType).operations as OperationResponseType[]));
     }
 
-    private clearCanvas(element: HTMLElement): void {
-        if (Chart.getChart(element)) {
+    private clearCanvas(element: HTMLElement | null): void {
+        if (element && Chart.getChart(element)) {
             Chart.getChart(element).destroy();
         }
-    }
 
+    }
 
     private showDiagram(data: OperationResponseType[]): void {
 
-        if (this.incomeDiagram) {
-            this.clearCanvas(this.incomeDiagram);
+        if (this.incomeDiagramElement) {
+            this.clearCanvas(this.incomeDiagramElement);
         }
         if (this.expensesDiagram) {
             this.clearCanvas(this.expensesDiagram);
@@ -114,42 +114,45 @@ export class Dashboard {
             }
         })
 
-        new Chart(this.incomeDiagram, {
-            type: 'pie',
-            responsive: true,
-            maintainAspectRatio: false,
-            data: {
-                labels: incomeDataName,
-                datasets: [{
-                    data: incomeData,
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Доходы',
-                        color: '#290661',
-                        font: {
-                            size: 28
-                        }
-                    },
-                    legend: {
-                        align: 'start',
-                        labels: {
-                            generateLabels: chart => chart.data.labels.map((l, i) => ({
-                                datasetIndex: 0,
-                                index: i,
-                                text: l.slice(0, 15),
-                                fillStyle: chart.data.datasets[0].backgroundColor[i],
-                                strokeStyle: chart.data.datasets[0].backgroundColor[i],
-                            }))
+        if (this.incomeDiagramElement) {
+            new Chart((this.incomeDiagramElement as HTMLCanvasElement), {
+                type: 'pie',
+                responsive: true,
+                maintainAspectRatio: false,
+                data: {
+                    labels: incomeDataName,
+                    datasets: [{
+                        data: incomeData,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Доходы',
+                            color: '#290661',
+                            font: {
+                                size: 28
+                            }
+                        },
+                        legend: {
+                            align: 'start',
+                            labels: {
+                                generateLabels: (chart: GenerateLabelsTypes) => chart.data.labels.map((l, i) => ({
+                                    datasetIndex: 0,
+                                    index: i,
+                                    text: l.slice(0, 15),
+                                    fillStyle: chart.data.datasets[0].backgroundColor[i],
+                                    strokeStyle: chart.data.datasets[0].backgroundColor[i],
+                                }))
+                            }
                         }
                     }
                 }
-            }
-        });
+            });
+        }
+
 
         new Chart(this.expensesDiagram, {
             type: 'pie',
@@ -175,7 +178,7 @@ export class Dashboard {
                     legend: {
                         align: 'start',
                         labels: {
-                            generateLabels: chart => chart.data.labels.map((l, i) => ({
+                            generateLabels: (chart: GenerateLabelsTypes) => chart.data.labels.map((l, i) => ({
                                 datasetIndex: 0,
                                 index: i,
                                 text: l.slice(0, 15),

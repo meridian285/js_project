@@ -1,6 +1,6 @@
-import {LOGIN} from "../../../config/config";
 import {AuthUtils} from "../../utils/auth-utils";
 import {AuthService} from "../service/auth-service";
+import {ApiEnum} from "../../types/api.enum";
 
 export class Logout {
     readonly openNewRoute: any;
@@ -8,7 +8,7 @@ export class Logout {
         this.openNewRoute = openNewRoute;
 
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey) || !AuthUtils.getAuthInfo(AuthUtils.refreshTokenKey)) {
-            return this.openNewRoute(LOGIN);
+            return this.openNewRoute(ApiEnum.LOGIN);
         }
 
         this.logout().then();
@@ -22,6 +22,6 @@ export class Logout {
         //Удаляются из localStorage токены и инфо
         AuthUtils.removeAuthInfo();
 
-        this.openNewRoute(LOGIN);
+        this.openNewRoute(ApiEnum.LOGIN);
     }
 }

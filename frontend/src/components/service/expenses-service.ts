@@ -7,6 +7,7 @@ import {UpdateExpenseResponseType} from "../../types/update-expense-response.typ
 import {GetExpenseResponseType} from "../../types/get-expense-response.type";
 import {CreateExpenseResponseType} from "../../types/create-expense-response.type";
 import {DeleteExpenseResponseType} from "../../types/delete-expense-response.type";
+import {BodyCategoryType} from "../../types/body-category.type";
 
 export class ExpensesService{
 
@@ -50,7 +51,7 @@ export class ExpensesService{
         return returnObject;
     }
 
-    public static async updateExpense(id: number, data: { title: string }): Promise<ApiEnum | UpdateExpenseResponseType> {
+    public static async updateExpense(id: number, data: BodyCategoryType): Promise<ApiEnum | UpdateExpenseResponseType> {
         const returnObject: UpdateExpenseResponseType = {
             error: false,
             redirect: null,
@@ -71,7 +72,7 @@ export class ExpensesService{
         return returnObject;
     }
 
-    public static async createExpense(data: { title: string; }): Promise<ApiEnum | CreateExpenseResponseType> {
+    public static async createExpense(data: BodyCategoryType): Promise<ApiEnum | CreateExpenseResponseType> {
         const returnObject: CreateExpenseResponseType = {
             error: false,
             redirect: null,

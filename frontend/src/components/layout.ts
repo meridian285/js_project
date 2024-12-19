@@ -1,14 +1,14 @@
 import {HttpUtils} from "../utils/http-utils";
-import {BALANCE} from "../../config/config";
 import {AuthUtils} from "../utils/auth-utils";
 import {ResultHttpUtilsType} from "../types/result-httpUtils.type";
+import {ApiEnum} from "../types/api.enum";
 
 export class Layout {
 
     public static async getBalance(openNewRoute: any) {
         const balanceElement: HTMLElement | null = document.getElementById('balance');
 
-        const response: ResultHttpUtilsType = await HttpUtils.request(BALANCE)
+        const response: ResultHttpUtilsType = await HttpUtils.request(ApiEnum.BALANCE)
 
         if (response.error) {
             return response.redirect ? openNewRoute(response.redirect) : null;

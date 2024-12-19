@@ -1,4 +1,3 @@
-import {EXPENSES} from "../../../config/config";
 import {ExpensesService} from "../service/expenses-service";
 import {FieldsInputType} from "../../types/fields-input.type";
 import {ApiEnum} from "../../types/api.enum";

@@ -1,6 +1,7 @@
-import config, {POST, REFRESH} from "../../config/config";
-import {TokensType, UserInfoType} from "../types/tokens.type";
-import {AuthDataType} from "../types/authData.type";
+import {UserInfoType} from "../types/tokens.type";
+import {MethodEnum} from "../types/method-enum";
+import {ApiEnum} from "../types/api.enum";
+import config from "../../config/config";
 
 export class AuthUtils {
     public static accessTokenKey: string = 'accessToken';
@@ -26,7 +27,7 @@ export class AuthUtils {
         localStorage.removeItem(this.userInfoKey);
     }
 
-    public static getAuthInfo(key:string | null = null) {
+    public static getAuthInfo(key:string | null = null): string | null | {[p: string]: string | null} {
         if (key && [this.accessTokenKey, this.refreshTokenKey, this.userInfoKey].includes(key)) {
             return localStorage.getItem(key);
         } else {
@@ -40,11 +41,11 @@ export class AuthUtils {
 
     public static async updateRefreshToken(): Promise<boolean> {
         let result: boolean = false;
-        const refreshToken = this.getAuthInfo(this.refreshTokenKey);
+        const refreshToken: string | null | {[p: string]: string | null} = this.getAuthInfo(this.refreshTokenKey);
         if (refreshToken && !this.isTokenRefreshing) {
             this.isTokenRefreshing = true;
-            const response: Response = await fetch(config.api + REFRESH, {
-                method: POST,
+            const response: Response = await fetch(config.api + ApiEnum.REFRESH, {
+                method: MethodEnum.POST,
                 headers: {
                     'Content-type': 'application/json',
                     'Accept': 'application/json',

@@ -1,6 +1,5 @@
 import {UrlUtils} from "../service/url-utils";
 import {IncomeService} from "../service/income-service";
-import {INCOME} from "../../../config/config";
 import {ApiEnum} from "../../types/api.enum";
 import {GetIncomeResponseType, IncomeResponse} from "../../types/incomes/get-income-response.type";
 
@@ -43,6 +42,6 @@ export class EditIncome {
             title: (this.inputNameElement as HTMLInputElement).value,
         });
 
-        this.openNewRoute(INCOME);
+        this.openNewRoute(ApiEnum.INCOME);
     }
 }

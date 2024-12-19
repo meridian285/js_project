@@ -1,7 +1,6 @@
 import {IncomeService} from "../service/income-service";
 import {ExpensesService} from "../service/expenses-service";
 import {OperationsService} from "../service/operations-service";
-import {OPERATIONS} from "../../../config/config";
 import {UrlUtils} from "../service/url-utils";
 import {ApiEnum} from "../../types/api.enum";
 import {GetIncomesResponseType} from "../../types/incomes/get-incomes-response.type";
@@ -10,8 +9,8 @@ import {ExpensesResponse, GetExpensesResponseType} from "../../types/get-expense
 export class CreateOperation {
     readonly openNewRoute: any;
     readonly typeSelectElement: HTMLElement | null;
-    private categorySelectElement: HTMLElement | null;
-    private saveButtonElement: HTMLElement | null;
+    readonly categorySelectElement: HTMLElement | null;
+    readonly saveButtonElement: HTMLElement | null;
     private amountInputElement: HTMLElement | null;
     private dateInputElement: HTMLElement | null;
     private commentInputElement: HTMLElement | null;

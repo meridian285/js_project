@@ -6,7 +6,7 @@ import {ParamForResponseType} from "../types/param-for-response.type";
 import {ResultHttpUtilsType} from "../types/result-httpUtils.type";
 
 export class HttpUtils {
-    public static async request(url: string, method:MethodEnum = MethodEnum.GET, useAuth: boolean = true, body: any | null = null): Promise<ResultHttpUtilsType> {
+    public static async request(url: string, method:MethodEnum = MethodEnum.GET, useAuth: boolean = true, body: unknown | null = null): Promise<ResultHttpUtilsType> {
 
         const result: ResultHttpUtilsType = {
             error: false,
@@ -25,7 +25,7 @@ export class HttpUtils {
         if (useAuth) {
             token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey);
             if (token) {
-                params.headers['x-auth-token'] = token;
+                params.headers['x-auth-token'] = token as string;
             }
         }
 

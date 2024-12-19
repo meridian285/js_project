@@ -1,5 +1,4 @@
 import {UrlUtils} from "../service/url-utils";
-import {OPERATIONS} from "../../../config/config";
 import {OperationsService} from "../service/operations-service";
 import {ApiEnum} from "../../types/api.enum";
 import {OperationsReturnType} from "../../types/operations-return.type";
