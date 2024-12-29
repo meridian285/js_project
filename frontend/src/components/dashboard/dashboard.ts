@@ -5,13 +5,15 @@ import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {ChartDataType} from "../../types/chart-data.type";
 import {GenerateLabelsTypes} from "../../types/chartjs/generateLabels.types";
+import {BubbleDataPoint, Chart, ChartData, ChartType, ChartTypeRegistry, DefaultDataPoint, Point} from "chart.js";
+import {GenerateLabelsType} from "../../types/generateLabels.type";
 
 export class Dashboard {
     readonly openNewRoute: any;
     private table: HTMLElement | null;
     readonly startDateInput: HTMLElement | null;
     readonly endDateInput: HTMLElement | null;
-    readonly incomeDiagramElement: HTMLElement | null;
+    readonly incomeDiagramElement: HTMLElement | null = null;
     readonly expensesDiagram: HTMLElement | null;
 
     // хотелось бы вот так записать, но такого класса нет, а файл Chart библиотечный как тут быть?
@@ -72,9 +74,12 @@ export class Dashboard {
         this.showDiagram(((response as OperationsReturnType).operations as OperationResponseType[]));
     }
 
-    private clearCanvas(element: HTMLElement | null): void {
-        if (element && Chart.getChart(element)) {
-            Chart.getChart(element).destroy();
+    private clearCanvas(element: HTMLCanvasElement): void {
+        if (element) {
+            const clearCanvas = Chart.getChart(element)
+            if (clearCanvas) {
+                clearCanvas.destroy();
+            }
         }
 
     }
@@ -82,10 +87,10 @@ export class Dashboard {
     private showDiagram(data: OperationResponseType[]): void {
 
         if (this.incomeDiagramElement) {
-            this.clearCanvas(this.incomeDiagramElement);
+            this.clearCanvas(this.expensesDiagram as HTMLCanvasElement);
         }
         if (this.expensesDiagram) {
-            this.clearCanvas(this.expensesDiagram);
+            this.clearCanvas(this.expensesDiagram as HTMLCanvasElement);
         }
 
         let incomeData: number[] = [];
@@ -115,7 +120,7 @@ export class Dashboard {
         })
 
         if (this.incomeDiagramElement) {
-            new Chart((this.incomeDiagramElement as HTMLCanvasElement), {
+            new Chart(this.incomeDiagramElement as HTMLCanvasElement, {
                 type: 'pie',
                 responsive: true,
                 maintainAspectRatio: false,
@@ -139,7 +144,7 @@ export class Dashboard {
                         legend: {
                             align: 'start',
                             labels: {
-                                generateLabels: (chart: GenerateLabelsTypes) => chart.data.labels.map((l, i) => ({
+                                generateLabels: (chart:  GenerateLabelsTypes) => (chart.data.labels as GenerateLabelsType[]).map((l: GenerateLabelsType, i: number): GenerateLabelsType => ({
                                     datasetIndex: 0,
                                     index: i,
                                     text: l.slice(0, 15),
@@ -154,7 +159,7 @@ export class Dashboard {
         }
 
 
-        new Chart(this.expensesDiagram, {
+        new Chart(this.expensesDiagram as HTMLCanvasElement, {
             type: 'pie',
             responsive: true,
             maintainAspectRatio: false,
@@ -178,7 +183,7 @@ export class Dashboard {
                     legend: {
                         align: 'start',
                         labels: {
-                            generateLabels: (chart: GenerateLabelsTypes) => chart.data.labels.map((l, i) => ({
+                            generateLabels: (chart: GenerateLabelsTypes) => chart.data.labels.map((l, i): GenerateLabelsType => ({
                                 datasetIndex: 0,
                                 index: i,
                                 text: l.slice(0, 15),
