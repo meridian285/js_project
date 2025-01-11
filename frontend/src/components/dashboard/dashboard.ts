@@ -5,7 +5,16 @@ import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {ChartDataType} from "../../types/chart-data.type";
 import {GenerateLabelsTypes} from "../../types/chartjs/generateLabels.types";
-import {BubbleDataPoint, Chart, ChartData, ChartType, ChartTypeRegistry, DefaultDataPoint, Point} from "chart.js";
+import {
+    BubbleDataPoint,
+    Chart,
+    ChartData,
+    ChartType,
+    ChartTypeRegistry,
+    DefaultDataPoint,
+    LegendItem,
+    Point
+} from "chart.js";
 import {GenerateLabelsType} from "../../types/generateLabels.type";
 
 export class Dashboard {
@@ -122,8 +131,8 @@ export class Dashboard {
         if (this.incomeDiagramElement) {
             new Chart(this.incomeDiagramElement as HTMLCanvasElement, {
                 type: 'pie',
-                responsive: true,
-                maintainAspectRatio: false,
+                // responsive: true,
+                // maintainAspectRatio: false,
                 data: {
                     labels: incomeDataName,
                     datasets: [{
@@ -144,13 +153,16 @@ export class Dashboard {
                         legend: {
                             align: 'start',
                             labels: {
-                                generateLabels: (chart:  GenerateLabelsTypes) => (chart.data.labels as GenerateLabelsType[]).map((l: GenerateLabelsType, i: number): GenerateLabelsType => ({
-                                    datasetIndex: 0,
-                                    index: i,
-                                    text: l.slice(0, 15),
-                                    fillStyle: chart.data.datasets[0].backgroundColor[i],
-                                    strokeStyle: chart.data.datasets[0].backgroundColor[i],
-                                }))
+                                generateLabels: (chart:  Chart) => (chart.data.labels as string[]).map((l: string, i: number): LegendItem => {
+                                    const backgroundColor = chart.data.datasets[0].backgroundColor as string[];
+                                    return {
+                                        datasetIndex: 0,
+                                        index: i,
+                                        text: l.slice(0, 15),
+                                        fillStyle: backgroundColor[i],
+                                        strokeStyle: backgroundColor[i],
+                                    }
+                                })
                             }
                         }
                     }
@@ -161,8 +173,8 @@ export class Dashboard {
 
         new Chart(this.expensesDiagram as HTMLCanvasElement, {
             type: 'pie',
-            responsive: true,
-            maintainAspectRatio: false,
+            // responsive: true,
+            // maintainAspectRatio: false,
             data: {
                 labels: expensesDataName,
                 datasets: [{
@@ -183,13 +195,16 @@ export class Dashboard {
                     legend: {
                         align: 'start',
                         labels: {
-                            generateLabels: (chart: GenerateLabelsTypes) => chart.data.labels.map((l, i): GenerateLabelsType => ({
-                                datasetIndex: 0,
-                                index: i,
-                                text: l.slice(0, 15),
-                                fillStyle: chart.data.datasets[0].backgroundColor[i],
-                                strokeStyle: chart.data.datasets[0].backgroundColor[i],
-                            }))
+                            generateLabels: (chart:  Chart) => (chart.data.labels as string[]).map((l: string, i: number): LegendItem => {
+                                const backgroundColor = chart.data.datasets[0].backgroundColor as string[];
+                                return {
+                                    datasetIndex: 0,
+                                    index: i,
+                                    text: l.slice(0, 15),
+                                    fillStyle: backgroundColor[i],
+                                    strokeStyle: backgroundColor[i],
+                                }
+                            })
                         }
                     }
                 }
