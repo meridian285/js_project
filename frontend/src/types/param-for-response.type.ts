@@ -3,7 +3,7 @@ import {MethodEnum} from "./method-enum";
 export type ParamForResponseType = {
     method: MethodEnum,
     headers: Headers,
-    body?: unknown,
+    body?: any,
 }
 
 export type Headers = {

@@ -68,9 +68,19 @@ export class Login {
         }
         if ((this.validateField)) {
 
+            let email = null;
+            if ((this.fields as FieldsInputType[]).find((field: FieldsInputType): boolean => field.id === 'emailInput')) {
+                email = (this.fields as FieldsInputType[]).find(field  => field.id === 'emailInput');
+            }
+
+            let password = null;
+            if ((this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')) {
+                password = (this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')
+            }
+
             const loginResult = await AuthService.logIn({
-                email: this.fields.find(field => field.id === 'emailInput').element.value,
-                password: this.fields.find(field => field.id === 'passwordInput').element.value,
+                email: ((email as FieldsInputType).element as HTMLInputElement).value,
+                password: ((password as FieldsInputType).element as HTMLInputElement).value,
                 rememberMe: (this.rememberMeElement as HTMLInputElement).checked,
             });
 

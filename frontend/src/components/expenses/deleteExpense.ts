@@ -7,6 +7,8 @@ import {ExpenseResponse, GetExpenseResponseType} from "../../types/get-expense-r
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {DeleteExpenseResponseType} from "../../types/delete-expense-response.type";
+import _default from "chart.js/dist/plugins/plugin.tooltip";
+import numbers = _default.defaults.animations.numbers;
 
 export class DeleteExpense {
     readonly openNewRoute: any;
@@ -68,7 +70,7 @@ export class DeleteExpense {
 
     private async deleteOperation(id: number[]): Promise<void> {
         for (const item of id) {
-            const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(item);
+            const response: OperationsReturnType | ApiEnum = await OperationsService.deleteOperation(item.toString());
 
             if ((response as OperationsReturnType).error) {
                 (response as OperationsReturnType).redirect ? this.openNewRoute((response as OperationsReturnType).redirect) : null;

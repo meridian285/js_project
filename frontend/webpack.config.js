@@ -26,7 +26,6 @@ module.exports = {
             patterns: [
                 {from: "./src/templates", to: "templates"},
                 {from: "./src/static/images", to: "images"},
-                {from: "./src/components/dashboard/dashboard.ts", to: "js"},
                 {from: "./src/components/dashboard/menu.js", to: "js"},
                 {from: "./src/components/dashboard/diagrams.js", to: "js"},
                 {from: "./src/utils/delete_action.ts", to: "js"},
@@ -36,16 +35,4 @@ module.exports = {
             ],
         }),
     ],
-    // module: {
-    //     rules: [
-    //         {
-    //             test: /\.scss$/i,
-    //             use: [
-    //                 "style-loader",
-    //                 "css-loader",
-    //                 "sass-loader",
-    //             ],
-    //         },
-    //     ],
-    // },
 };

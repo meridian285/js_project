@@ -131,8 +131,6 @@ export class Dashboard {
         if (this.incomeDiagramElement) {
             new Chart(this.incomeDiagramElement as HTMLCanvasElement, {
                 type: 'pie',
-                // responsive: true,
-                // maintainAspectRatio: false,
                 data: {
                     labels: incomeDataName,
                     datasets: [{
@@ -141,6 +139,8 @@ export class Dashboard {
                     }]
                 },
                 options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: true,
@@ -173,8 +173,6 @@ export class Dashboard {
 
         new Chart(this.expensesDiagram as HTMLCanvasElement, {
             type: 'pie',
-            // responsive: true,
-            // maintainAspectRatio: false,
             data: {
                 labels: expensesDataName,
                 datasets: [{
@@ -183,6 +181,8 @@ export class Dashboard {
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     title: {
                         display: true,
