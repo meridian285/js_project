@@ -11,7 +11,7 @@ import {CreateExpense} from "./components/expenses/createExpense";
 import {DeleteIncome} from "./components/income/deleteIncome";
 import {DeleteExpense} from "./components/expenses/deleteExpense";
 import {CreateOperation} from "./components/income-and-expenses/create-operation";
-import {EditOperation} from "./components/income-and-expenses/edit-operation.js";
+import {EditOperation} from "./components/income-and-expenses/edit-operation";
 import {FileUtils} from "./utils/file-utils";
 import {EditExpense} from "./components/expenses/editExpense";
 import {DeleteOperation} from "./components/income-and-expenses/delete-operation";

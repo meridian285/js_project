@@ -65,19 +65,16 @@ export class CreateIncome {
     private async createIncome(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault();
 
-        if ((this.validateField)) {
-
-            await IncomeService.createIncome({
-                title: (this.inputNameElement as HTMLInputElement).value
-            })
-
-            const formElement: HTMLElement | null = document.getElementById('form');
-
-            if (formElement) {
-                (formElement as HTMLFormElement).reset();
-            }
-
-            this.openNewRoute(ApiEnum.INCOME);
+        if (!(this.validateField)) {
+            return;
         }
+        await IncomeService.createIncome({
+            title: (this.inputNameElement as HTMLInputElement).value
+        })
+        const formElement: HTMLElement | null = document.getElementById('form');
+        if (formElement) {
+            (formElement as HTMLFormElement).reset();
+        }
+        this.openNewRoute(ApiEnum.INCOME);
     }
 }

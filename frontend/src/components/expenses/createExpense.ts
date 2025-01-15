@@ -64,19 +64,16 @@ export class CreateExpense {
     private async createIncome(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault();
 
-        if ((this.validateField)) {
-
-            await ExpensesService.createExpense({
-                title: (this.inputNameElement as HTMLInputElement).value
-            });
-
-            const formElement: HTMLElement | null = document.getElementById('form');
-
-            if (formElement) {
-                (formElement as HTMLFormElement).reset();
-            }
-
-            this.openNewRoute(ApiEnum.EXPENSES);
+        if (!(this.validateField)) {
+            return;
         }
+        await ExpensesService.createExpense({
+            title: (this.inputNameElement as HTMLInputElement).value
+        });
+        const formElement: HTMLElement | null = document.getElementById('form');
+        if (formElement) {
+            (formElement as HTMLFormElement).reset();
+        }
+        this.openNewRoute(ApiEnum.EXPENSES);
     }
 }

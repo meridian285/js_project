@@ -66,38 +66,34 @@ export class Login {
         if (this.commonErrorElement) {
             this.commonErrorElement.style.display = 'none';
         }
-        if ((this.validateField)) {
-
-            let email = null;
-            if ((this.fields as FieldsInputType[]).find((field: FieldsInputType): boolean => field.id === 'emailInput')) {
-                email = (this.fields as FieldsInputType[]).find(field  => field.id === 'emailInput');
-            }
-
-            let password = null;
-            if ((this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')) {
-                password = (this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')
-            }
-
-            const loginResult = await AuthService.logIn({
-                email: ((email as FieldsInputType).element as HTMLInputElement).value,
-                password: ((password as FieldsInputType).element as HTMLInputElement).value,
-                rememberMe: (this.rememberMeElement as HTMLInputElement).checked,
+        if (!(this.validateField)) {
+            return;
+        }
+        let email = null;
+        if ((this.fields as FieldsInputType[]).find((field: FieldsInputType): boolean => field.id === 'emailInput')) {
+            email = (this.fields as FieldsInputType[]).find(field => field.id === 'emailInput');
+        }
+        let password = null;
+        if ((this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')) {
+            password = (this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')
+        }
+        const loginResult = await AuthService.logIn({
+            email: ((email as FieldsInputType).element as HTMLInputElement).value,
+            password: ((password as FieldsInputType).element as HTMLInputElement).value,
+            rememberMe: (this.rememberMeElement as HTMLInputElement).checked,
+        });
+        if (loginResult) {
+            // сохраняем данные в localStorage
+            AuthUtils.setAuthInfo(loginResult.tokens.accessToken, loginResult.tokens.refreshToken, {
+                id: loginResult.user.id,
+                name: loginResult.user.name,
+                lastName: loginResult.user.lastName,
             });
 
-            if (loginResult) {
-                // сохраняем данные в localStorage
-                AuthUtils.setAuthInfo(loginResult.tokens.accessToken, loginResult.tokens.refreshToken, {
-                    id: loginResult.user.id,
-                    name: loginResult.user.name,
-                    lastName: loginResult.user.lastName,
-                });
-
-                return this.openNewRoute('/');
-            }
-
-            if (this.commonErrorElement) {
-                this.commonErrorElement.style.display = 'block';
-            }
+            return this.openNewRoute('/');
+        }
+        if (this.commonErrorElement) {
+            this.commonErrorElement.style.display = 'block';
         }
     }
 }

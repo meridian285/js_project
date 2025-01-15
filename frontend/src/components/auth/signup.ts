@@ -135,23 +135,21 @@ export class SignUp {
         if (this.fullNameElement) {
             arrayName = (this.fullNameElement as HTMLInputElement).value.split(' ');
         }
-        if ((this.validateField)) {
-
-            const signUpResult = await AuthService.signUp({
-                name: (arrayName as Array<string>)[0],
-                lastName: (arrayName as Array<string>)[1],
-                email: (this.emailElement as HTMLInputElement).value,
-                password: (this.passwordElement as HTMLInputElement).value,
-                passwordRepeat: (this.repeatPasswordElement as HTMLInputElement).value,
-            });
-
-            if (signUpResult) {
-                return this.openNewRoute(ApiEnum.LOGIN);
-            }
-
-            if (this.commonErrorElement) {
-                this.commonErrorElement.style.display = 'block';
-            }
+        if (!(this.validateField)) {
+            return;
+        }
+        const signUpResult = await AuthService.signUp({
+            name: (arrayName as Array<string>)[0],
+            lastName: (arrayName as Array<string>)[1],
+            email: (this.emailElement as HTMLInputElement).value,
+            password: (this.passwordElement as HTMLInputElement).value,
+            passwordRepeat: (this.repeatPasswordElement as HTMLInputElement).value,
+        });
+        if (signUpResult) {
+            return this.openNewRoute(ApiEnum.LOGIN);
+        }
+        if (this.commonErrorElement) {
+            this.commonErrorElement.style.display = 'block';
         }
     }
 }

@@ -4,18 +4,10 @@ import {ApiEnum} from "../../types/api.enum";
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {ChartDataType} from "../../types/chart-data.type";
-import {GenerateLabelsTypes} from "../../types/chartjs/generateLabels.types";
 import {
-    BubbleDataPoint,
     Chart,
-    ChartData,
-    ChartType,
-    ChartTypeRegistry,
-    DefaultDataPoint,
     LegendItem,
-    Point
 } from "chart.js";
-import {GenerateLabelsType} from "../../types/generateLabels.type";
 
 export class Dashboard {
     readonly openNewRoute: any;
