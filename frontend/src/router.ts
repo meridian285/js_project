@@ -39,7 +39,7 @@ export class Router {
                 load: (): void => {
                     new Dashboard(this.openNewRoute.bind(this));
                 },
-                scripts: ['chart.js', 'menu.js'],
+                scripts: ['chart.umd.js', 'menu.js'],
             },
             {
                 route: ApiEnum.LOGIN,

@@ -5,8 +5,9 @@ import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
 import {ChartDataType} from "../../types/chart-data.type";
 import {
-    Chart,
-    LegendItem,
+    ArcElement,
+    Chart, Legend,
+    LegendItem, PieController, Title, Tooltip,
 } from "chart.js";
 
 export class Dashboard {
@@ -119,6 +120,8 @@ export class Dashboard {
                 incomeDataName.push(item.category)
             }
         })
+
+        Chart.register(ArcElement, Tooltip, Legend, Title, PieController)
 
         if (this.incomeDiagramElement) {
             new Chart(this.incomeDiagramElement as HTMLCanvasElement, {
