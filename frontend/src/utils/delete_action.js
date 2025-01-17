@@ -1,3 +1,4 @@
+
 // удаление категории дохода по id
 function handler_delete_income(element: HTMLElement): void {
     const link: HTMLElement | null = document.getElementById('delete-btn');

@@ -131,7 +131,7 @@ export class SignUp {
             this.commonErrorElement.style.display = 'none';
         }
 
-        let arrayName = null;
+        let arrayName;
         if (this.fullNameElement) {
             arrayName = (this.fullNameElement as HTMLInputElement).value.split(' ');
         }

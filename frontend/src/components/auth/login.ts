@@ -69,11 +69,11 @@ export class Login {
         if (!(this.validateField)) {
             return;
         }
-        let email = null;
+        let email;
         if ((this.fields as FieldsInputType[]).find((field: FieldsInputType): boolean => field.id === 'emailInput')) {
             email = (this.fields as FieldsInputType[]).find(field => field.id === 'emailInput');
         }
-        let password = null;
+        let password;
         if ((this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')) {
             password = (this.fields as FieldsInputType[]).find(field => field.id === 'passwordInput')
         }
