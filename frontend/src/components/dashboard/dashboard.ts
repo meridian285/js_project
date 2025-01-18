@@ -83,7 +83,6 @@ export class Dashboard {
                 clearCanvas.destroy();
             }
         }
-
     }
 
     private showDiagram(data: OperationResponseType[]): void {
@@ -130,7 +129,8 @@ export class Dashboard {
                     labels: incomeDataName,
                     datasets: [{
                         data: incomeData,
-                        borderWidth: 1
+                        borderWidth: 1,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE5556', '#4BC0C0'],
                     }]
                 },
                 options: {
@@ -172,7 +172,8 @@ export class Dashboard {
                 labels: expensesDataName,
                 datasets: [{
                     data: expensesData,
-                    borderWidth: 1
+                    borderWidth: 1,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE5556', '#4BC0C0'],
                 }]
             },
             options: {
