@@ -202,17 +202,18 @@ export class Router {
     private async openNewRoute(url: string | ApiEnum): Promise<void> {
         const currentRout: string = window.location.pathname;
         const unused: string = '';
-        const obj: any = {};
+        const obj: {} = {};
         history.pushState(obj, unused, url);
         await this.activateRoute(null, currentRout);
     }
 
-    private async clickHandler(e: any): Promise<void> {
+    private async clickHandler(e: Event): Promise<void> {
         let element: HTMLLinkElement | null = null;
-        if ((e.target as HTMLElement).nodeName === 'A') {
-            element = e.target;
-        } else if (e.target.parentNode.nodeName === 'A') {
-            element = e.target.parentNode;
+        let target = e.target as HTMLLinkElement;
+        if (target.nodeName === 'A') {
+            element = target;
+        } else if (target.parentNode?.nodeName === 'A') {
+            element = target;
         }
 
         if (element) {
@@ -227,7 +228,7 @@ export class Router {
         }
     }
 
-    private async activateRoute(e: any, oldRoute: string | null = null): Promise<void> {
+    private async activateRoute(e: Event | null, oldRoute: string | null = null): Promise<void> {
         if (oldRoute) {
             const currentRoute: RouteType | undefined = this.routes.find(item => item.route === oldRoute);
 

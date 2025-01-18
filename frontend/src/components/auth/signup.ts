@@ -5,7 +5,7 @@ import {FieldsInputType} from "../../types/fields-input.type";
 
 export class SignUp {
     readonly openNewRoute: any;
-    readonly form: any | null = null;
+    readonly form: HTMLFormElement | null = null;
     readonly fullNameElement: HTMLElement | null = null;
     private emailElement: HTMLElement | null = null;
     private passwordElement: HTMLElement | null = null;
@@ -21,7 +21,7 @@ export class SignUp {
             return this.openNewRoute(ApiEnum.DASHBOARD);
         }
 
-        this.form = document.getElementById('form');
+        this.form = document.getElementById('form') as HTMLFormElement;
         if (this.form) {
             this.form.reset();
         }
