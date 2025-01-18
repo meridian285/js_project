@@ -1,16 +1,18 @@
 import {IncomeService} from "../service/income-service";
 import {ApiEnum} from "../../types/api.enum";
 import {GetIncomesResponseType, IncomesResponse} from "../../types/incomes/get-incomes-response.type";
+import {handler_delete_income} from '../../utils/delete_action';
 
 export class Income {
     readonly openNewRoute: any;
+
     constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
         this.getCards().then();
     }
 
-    private async getCards()  {
+    private async getCards() {
         const response: ApiEnum | GetIncomesResponseType = await IncomeService.getIncomes();
 
         if ((response as GetIncomesResponseType).error) {
@@ -34,10 +36,18 @@ export class Income {
                     ${item.title}
                 <div class="action pt-3">
                     <a href="${ApiEnum.INCOME_EDIT}?id=${item.id}"  class="btn btn-primary">Редактировать</a>
-                    <a href="#" onclick="handler_delete_income(this)" class="delete-card btn btn-danger" id="btn-${item.id}" data-bs-toggle="modal"
+                    <a href="#" class="delete-card btn btn-danger" id="btn-${item.id}" data-bs-toggle="modal"
                        data-bs-target="#exampleModal">Удалить</a>
                 </div>
             `;
+
+            const deleteButton: HTMLAnchorElement | null = cardElement.querySelector('.delete-card');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', (event: Event) => {
+                    event.preventDefault();
+                    handler_delete_income(deleteButton);
+                })
+            }
 
             if (newCard) {
                 newCard.before(cardElement);

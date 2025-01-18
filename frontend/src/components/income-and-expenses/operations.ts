@@ -3,6 +3,7 @@ import {OperationsService} from "../service/operations-service";
 import {ApiEnum} from "../../types/api.enum";
 import {OperationsReturnType} from "../../types/operations-return.type";
 import {OperationResponseType} from "../../types/operation-response.type";
+import {handler_delete_income, handler_delete_operation} from '../../utils/delete_action';
 
 export class Operations {
     readonly openNewRoute: any;
@@ -87,7 +88,7 @@ export class Operations {
                     <td>${dateFormat.toLocaleDateString('ru-RU')}</td>
                     <td>${item.comment}</td>
                     <td>
-                        <a href="#" onclick="handler_delete_operation(this)" id="btn-${item.id}" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button">
+                        <a href="#" class="delete-icon" id="btn-${item.id}" data-bs-toggle="modal" data-bs-target="#exampleModal" role="button">
                             <img src="../images/cart.png" alt="Корзина">
                         </a>
                         
@@ -96,6 +97,15 @@ export class Operations {
                         </a>
                     </td>
             `;
+
+            const deleteButton: HTMLAnchorElement | null = trElement.querySelector('.delete-icon');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', (event: Event) => {
+                    event.preventDefault();
+                    handler_delete_operation(deleteButton);
+                })
+            }
+
             if (this.table) {
                 this.table.appendChild(trElement);
             }

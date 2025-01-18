@@ -17,6 +17,7 @@ import {EditExpense} from "./components/expenses/editExpense";
 import {DeleteOperation} from "./components/income-and-expenses/delete-operation";
 import {RouteType} from "./types/route.type";
 import {ApiEnum} from "./types/api.enum";
+import {Menu} from "./components/menu/menu";
 
 export class Router {
     readonly titlePageElement: HTMLElement | null = null;
@@ -38,8 +39,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new Dashboard(this.openNewRoute.bind(this));
+                    new Menu();
                 },
-                scripts: ['chart.umd.js', 'menu.js'],
+                scripts: ['chart.umd.js'],
             },
             {
                 route: ApiEnum.LOGIN,
@@ -74,9 +76,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new Expenses(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['expenses.css'],
-                scripts: ['menu.js'],
             },
 
             {
@@ -86,9 +88,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new CreateExpense(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['create-expenses.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.EDIT_EXPENSES,
@@ -97,14 +99,15 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new EditExpense(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['edit-expenses.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.DELETE_EXPENSE,
                 load: (): void => {
                     new DeleteExpense(this.openNewRoute.bind(this));
+                    new Menu();
                 }
             },
             {
@@ -114,9 +117,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new Income(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['income.css'],
-                scripts: ['delete_action.js', 'menu.js'],
             },
             {
                 route: ApiEnum.CREATE_INCOME,
@@ -125,9 +128,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new CreateIncome(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['create-income.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.INCOME_EDIT,
@@ -136,14 +139,15 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new EditIncome(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['edit-income.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.DELETE_INCOME,
                 load: () => {
                     new DeleteIncome(this.openNewRoute.bind(this));
+                    new Menu();
                 }
             },
             {
@@ -153,9 +157,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new Operations(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['operations.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.CREATE_OPERATION,
@@ -164,9 +168,9 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new CreateOperation(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['create-operations.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.EDIT_OPERATION,
@@ -175,14 +179,15 @@ export class Router {
                 useLayout: '/templates/layout.html',
                 load: (): void => {
                     new EditOperation(this.openNewRoute.bind(this));
+                    new Menu();
                 },
                 styles: ['edit-operations.css'],
-                scripts: ['menu.js'],
             },
             {
                 route: ApiEnum.OPERATIONS_DELETE,
                 load: (): void => {
                     new DeleteOperation(this.openNewRoute.bind(this));
+                    new Menu();
                 }
             },
         ];

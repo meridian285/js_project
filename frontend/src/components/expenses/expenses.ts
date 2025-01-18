@@ -1,9 +1,11 @@
 import {ExpensesService} from "../service/expenses-service";
 import {ApiEnum} from "../../types/api.enum";
 import {ExpensesResponse, GetExpensesResponseType} from "../../types/get-expenses-response.type";
+import {handler_delete_expenses} from '../../utils/delete_action';
 
 export class Expenses {
     readonly openNewRoute: any;
+
     constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
@@ -23,6 +25,8 @@ export class Expenses {
     private showCards(getCards: ExpensesResponse[]): void {
         const newCard: HTMLElement | null = document.getElementById('newCard');
 
+        // window.handler_delete_income = Delete_action.handler_delete_income;
+
         getCards.forEach((item: ExpensesResponse) => {
             const cardElement: HTMLDivElement = document.createElement('div');
             cardElement.classList.add('card');
@@ -34,10 +38,19 @@ export class Expenses {
                     ${item.title}
                 <div class="action pt-3">
                     <a href="${ApiEnum.EDIT_EXPENSES}?id=${item.id}" class="btn btn-primary">Редактировать</a>
-                    <a href="#" onclick="handler_delete_expenses(this)" class="delete-card btn btn-danger" id="btn-${item.id}" data-bs-toggle="modal"
+                    <a href="#" class="delete-card btn btn-danger" id="btn-${item.id}" data-bs-toggle="modal"
                        data-bs-target="#exampleModal">Удалить</a>
                 </div>
             `;
+
+            const deleteButton: HTMLAnchorElement | null = cardElement.querySelector('.delete-card');
+            if (deleteButton) {
+                deleteButton.addEventListener('click', (event: Event) => {
+                    event.preventDefault();
+                    handler_delete_expenses(deleteButton);
+                })
+            }
+
             if (newCard) {
                 newCard.before(cardElement);
             }

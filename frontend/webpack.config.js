@@ -29,9 +29,6 @@ module.exports = {
             patterns: [
                 {from: "./src/templates", to: "templates"},
                 {from: "./src/static/images", to: "images"},
-                {from: "./src/components/dashboard/menu.js", to: "js"},
-                {from: "./src/components/dashboard/diagrams.js", to: "js"},
-                {from: "./src/utils/delete_action.js", to: "js"},
                 {from: "./node_modules/chart.js/dist/chart.umd.js", to: "js"},
                 {from: "./src/components/bootstrap.bundle.min.js", to: "js"},
                 {from: "./src/css", to: "css"},

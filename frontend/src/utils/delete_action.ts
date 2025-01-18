@@ -1,6 +1,5 @@
-
 // удаление категории дохода по id
-function handler_delete_income(element: HTMLElement): void {
+export function handler_delete_income(element: HTMLElement): void {
     const link: HTMLElement | null = document.getElementById('delete-btn');
     const id: string = element.id.replace(/[^0-9]/g, "")
     if (link) {
@@ -9,7 +8,7 @@ function handler_delete_income(element: HTMLElement): void {
 }
 
 // удаление категории расхода по id
-function handler_delete_expenses(element: HTMLElement): void {
+export function handler_delete_expenses(element: HTMLElement): void {
     const link: HTMLElement | null = document.getElementById('delete-btn');
     const id: string = element.id.replace(/[^0-9]/g, "")
     if (link) {
@@ -17,7 +16,7 @@ function handler_delete_expenses(element: HTMLElement): void {
     }
 }
 
-function handler_delete_operation(element: HTMLElement): void {
+export function handler_delete_operation(element: HTMLElement): void {
     const link: HTMLElement | null = document.getElementById('delete-btn');
     const id: string = element.id.replace(/[^0-9]/g, "")
     if (link) {
