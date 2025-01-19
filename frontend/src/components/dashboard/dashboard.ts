@@ -83,6 +83,22 @@ export class Dashboard {
                 clearCanvas.destroy();
             }
         }
+
+        // clearCanvas(element) {
+        //     if (Chart.getChart(element)) {
+        //         Chart.getChart(element).destroy();
+        //     }
+        // }
+
+        // if (element) {
+        //     clearCanvas(element) {
+        //         if (Chart.getChart(element)) {
+        //             Chart.getChart(element).destroy();
+        //         }
+        //     }
+        // }
+
+
     }
 
     private showDiagram(data: OperationResponseType[]): void {
