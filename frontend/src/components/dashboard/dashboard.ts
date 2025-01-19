@@ -18,7 +18,6 @@ export class Dashboard {
     readonly incomeDiagramElement: HTMLElement | null = null;
     readonly expensesDiagram: HTMLElement | null;
 
-    // хотелось бы вот так записать, но такого класса нет, а файл Chart библиотечный как тут быть?
     constructor(openNewRoute: any) {
         this.openNewRoute = openNewRoute;
 
