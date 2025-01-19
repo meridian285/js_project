@@ -77,28 +77,9 @@ export class Dashboard {
     }
 
     private clearCanvas(element: HTMLCanvasElement): void {
-        if (element) {
-            const clearCanvas = Chart.getChart(element)
-            if (clearCanvas) {
-                clearCanvas.destroy();
-            }
+        if (Chart.getChart(element)) {
+            Chart.getChart(element)?.destroy();
         }
-
-        // clearCanvas(element) {
-        //     if (Chart.getChart(element)) {
-        //         Chart.getChart(element).destroy();
-        //     }
-        // }
-
-        // if (element) {
-        //     clearCanvas(element) {
-        //         if (Chart.getChart(element)) {
-        //             Chart.getChart(element).destroy();
-        //         }
-        //     }
-        // }
-
-
     }
 
     private showDiagram(data: OperationResponseType[]): void {
@@ -164,7 +145,7 @@ export class Dashboard {
                         legend: {
                             align: 'start',
                             labels: {
-                                generateLabels: (chart:  Chart) => (chart.data.labels as string[]).map((l: string, i: number): LegendItem => {
+                                generateLabels: (chart: Chart) => (chart.data.labels as string[]).map((l: string, i: number): LegendItem => {
                                     const backgroundColor = chart.data.datasets[0].backgroundColor as string[];
                                     return {
                                         datasetIndex: 0,
@@ -207,7 +188,7 @@ export class Dashboard {
                     legend: {
                         align: 'start',
                         labels: {
-                            generateLabels: (chart:  Chart) => (chart.data.labels as string[]).map((l: string, i: number): LegendItem => {
+                            generateLabels: (chart: Chart) => (chart.data.labels as string[]).map((l: string, i: number): LegendItem => {
                                 const backgroundColor = chart.data.datasets[0].backgroundColor as string[];
                                 return {
                                     datasetIndex: 0,
