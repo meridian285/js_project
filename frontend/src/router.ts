@@ -207,13 +207,22 @@ export class Router {
         await this.activateRoute(null, currentRout);
     }
 
-    private async clickHandler(e: Event): Promise<void> {
+    private async clickHandler(e: any): Promise<void> {
+
+        //не работает
+        // let element: HTMLLinkElement | null = null;
+        // let target = e.target as HTMLLinkElement;
+        // if (target.nodeName === 'A') {
+        //     element = target;
+        // } else if (target.parentNode?.nodeName === 'A') {
+        //     element = target;
+        // }
+
         let element: HTMLLinkElement | null = null;
-        let target = e.target as HTMLLinkElement;
-        if (target.nodeName === 'A') {
-            element = target;
-        } else if (target.parentNode?.nodeName === 'A') {
-            element = target;
+        if ((e.target as HTMLElement).nodeName === 'A') {
+            element = e.target;
+        } else if (e.target.parentNode.nodeName === 'A') {
+            element = e.target.parentNode;
         }
 
         if (element) {
